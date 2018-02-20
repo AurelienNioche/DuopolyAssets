@@ -449,6 +449,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 51c151cc70eae47cc836517ca06b7f84, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1450191526 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1552315969035628, guid: c36585969fb2d482c909ed7141aa1c9e,
+    type: 2}
+  m_PrefabInternal: {fileID: 1893207375}
+--- !u!114 &1450191528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1450191526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fd58a23810e4c4e85784b8956cecb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1887430600
 Prefab:
   m_ObjectHideFlags: 0
@@ -588,6 +604,16 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114983773005414892, guid: c36585969fb2d482c909ed7141aa1c9e,
+        type: 2}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114983773005414892, guid: c36585969fb2d482c909ed7141aa1c9e,
+        type: 2}
+      propertyPath: m_Texture
+      value: 
+      objectReference: {fileID: 2800000, guid: 98f0cabc6e2764234b602b837e16793e, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c36585969fb2d482c909ed7141aa1c9e, type: 2}
   m_IsPrefabParent: 0

@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 114880750806247680}
   - component: {fileID: 114872044285980872}
   - component: {fileID: 114177512165203564}
-  - component: {fileID: 114267405138426532}
   - component: {fileID: 114309062634070448}
   - component: {fileID: 114723041921501364}
   - component: {fileID: 114713138788349982}
@@ -81,6 +80,8 @@ MonoBehaviour:
   HUDOpponent: {fileID: 0}
   buttonMenu: {fileID: 0}
   menuCentral: {fileID: 0}
+  currentStep: {fileID: 0}
+  progression: {fileID: 0}
   indicatorCentral: {fileID: 0}
   indicatorValidation: {fileID: 0}
 --- !u!114 &114177512165203564
@@ -92,17 +93,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a103b79305e224191832f48ef8440873, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114267405138426532
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1274369427177888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 391904b6d0c93496a8b7443bd6fb0369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114309062634070448
@@ -194,6 +184,8 @@ MonoBehaviour:
   buttonMenu: {fileID: 0}
   logo: {fileID: 0}
   blackBackground: {fileID: 0}
+  textCurrentStep: {fileID: 0}
+  textProgression: {fileID: 0}
   HUDPlayer: {fileID: 0}
   HUDOpponent: {fileID: 0}
   turns: {fileID: 0}

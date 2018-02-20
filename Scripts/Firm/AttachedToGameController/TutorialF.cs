@@ -53,9 +53,16 @@ public class TutorialF : MonoBehaviour {
 	List<int> positionsSeenByExampleConsumer;
 	List<int> firmsSeenByExampleConsumer;
 
+	List<TLTutoF> stateList;
+	int nStates;
+
 
 	// Use this for initialization
 	void Start () {
+
+		stateList = Enum.GetValues(typeof(TLTutoF)).Cast<TLTutoF>().ToList ();
+		nStates = stateList.Count;
+
 
 		consumersFieldOfView = gameController.GetConsumersFieldOfView ();
 		if (consumersFieldOfView == null) {
@@ -110,14 +117,14 @@ public class TutorialF : MonoBehaviour {
 
 			populationController.PlaceAgentsToInitialPosition (position, opponentPosition);
 
-			uiController.Initialize (
+			uiController.PrepareTutorial (
 				position, price, opponentPrice, 
 				scoreManager.GetScoreCumulative (), 
 				scoreManager.GetOpponentScoreCumulative ()			
 			);
 
 			submitProgression = true;
-			StartCoroutine(SubmitProgression ());
+			StartCoroutine (SubmitProgression ());
 
 			TutoNextStep ();
 			break;
@@ -612,6 +619,7 @@ public class TutorialF : MonoBehaviour {
 
 	void TutoNextStep () {
 		stateTuto += 1;
+		uiController.SetProgress (ComputeProgress ());
 		LogTutoState ();
 	}
 
@@ -639,10 +647,7 @@ public class TutorialF : MonoBehaviour {
 
 	IEnumerator SubmitProgression () {
 
-		List<TLTutoF> stateList = Enum.GetValues(typeof(TLTutoF)).Cast<TLTutoF>().ToList ();
-		int nStates = stateList.Count;
-
-		client.SubmitTutorialProgression (ComputeProgress (stateList, nStates));
+		client.SubmitTutorialProgression (ComputeProgress ());
 
 		while (submitProgression) {
 
@@ -650,7 +655,7 @@ public class TutorialF : MonoBehaviour {
 
 				yield return new WaitForSeconds (delayForCommunicatingProgress);
 				if (submitProgression) {
-					client.SubmitTutorialProgression (ComputeProgress (stateList, nStates));
+					client.SubmitTutorialProgression (ComputeProgress ());
 				}		
 			} else {
 				yield return new WaitForEndOfFrame ();
@@ -658,16 +663,20 @@ public class TutorialF : MonoBehaviour {
 		}
 	}
 
-	float ComputeProgress (List<TLTutoF> list, int listLength) {
+	float ComputeProgress () {
+
+		int nStateInit = 2;
+		int nStateToIgnore = 4 + nStateInit;
+
 		// Compute progress
-		int index = list.IndexOf (stateTuto);
+		int index = Math.Max(stateList.IndexOf (stateTuto) - nStateInit, 0);
 
 		float indexFloat = (float) index;
-		float nStatesFloat = (float) listLength;
+		float nStatesFloat = (float) nStates;
 
-		float progress = indexFloat / nStatesFloat * 100.0f; 
+		float progress = Math.Min(indexFloat / (nStatesFloat - nStateToIgnore), 1); 
 
-		Debug.Log ("TutorialF: Index of current state " + index + "; N state" + listLength + "; Progress " + progress);
+		Debug.Log ("TutorialF: Index of current state " + index + "; N state" + nStates + "; Progress " + progress);
 		return progress;
 	}
 

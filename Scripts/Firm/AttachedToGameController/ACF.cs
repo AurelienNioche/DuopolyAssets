@@ -19,6 +19,9 @@ public class ACF : MonoBehaviour {
 	public Animator blackBackground;
 
 	[HideInInspector]
+	public Animator currentStep;
+
+	[HideInInspector]
 	public Animator HUDPlayer;
 	[HideInInspector]
 	public Animator HUDOpponent;
@@ -79,6 +82,10 @@ public class ACF : MonoBehaviour {
 	void Start () {
 
 		textMenuCentral = Associate("TextMenuCentral");
+
+		currentStep = Associate ("CurrentStep");
+
+
 		logo = Associate ("Logo");
 		buttonMenu = Associate ("ButtonMenu");
 
@@ -127,9 +134,8 @@ public class ACF : MonoBehaviour {
 			Animator anim = gameObject.GetComponent<Animator> ();
 			return anim;
 		}
-		catch (NullReferenceException e){
-			Debug.Log ("UIController: I could not find object with tag '" + name + "'");
-			throw e;
+		catch (NullReferenceException){
+			throw new Exception ("UIController: I could not find object with tag '" + name + "'");
 		}
 	}
 }

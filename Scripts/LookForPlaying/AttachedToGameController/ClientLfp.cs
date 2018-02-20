@@ -14,6 +14,13 @@ public class DemandLfp  {
 	public static string playerInfo = "player_info";
 }
 
+class KeyLfp {
+
+	public static string demand = "demand";
+	public static string username = "username";
+	public static string playerId = "player_id";
+}
+
 
 public class ClientLfp : MonoBehaviour {
 
@@ -31,6 +38,8 @@ public class ClientLfp : MonoBehaviour {
 	Dictionary<string, string> requestInMemory;
 
 	// -------------- For player ------------------------ //
+
+	bool errorRaised;
 
 	string userName;
 	string playerId;
@@ -59,7 +68,9 @@ public class ClientLfp : MonoBehaviour {
 		url = gameController.GetUrl ();
 		timeBeforeRetryingDemand = gameController.GetTimeBeforeRetryingDemand ();
 
-		currentStep = "tutorial";
+		currentStep = GameStep.tutorial;
+
+		errorRaised = false;
 	}
 
 	// Update is called once per frame
@@ -79,8 +90,8 @@ public class ClientLfp : MonoBehaviour {
 		case TimeLineClientLfp.RegisteredAsPlayerAsk:
 
 			request.Clear ();
-			request ["demand"] = DemandLfp.registeredAsPlayer;
-			request ["username"] = userName;
+			request [KeyLfp.demand] = DemandLfp.registeredAsPlayer;
+			request [KeyLfp.username] = userName;
 
 			StartCoroutine (AskServer (request));
 
@@ -92,8 +103,8 @@ public class ClientLfp : MonoBehaviour {
 		case TimeLineClientLfp.RoomAvailableAsk:
 
 			request.Clear ();
-			request ["username"] = userName;
-			request ["demand"] = DemandLfp.roomAvailable;
+			request [KeyLfp.username] = userName;
+			request [KeyLfp.demand] = DemandLfp.roomAvailable;
 
 			StartCoroutine (AskServer (request));
 
@@ -105,8 +116,8 @@ public class ClientLfp : MonoBehaviour {
 		case TimeLineClientLfp.MissingPlayersAsk:
 
 			request.Clear ();
-			request ["demand"] = DemandLfp.missingPlayers;
-			request ["player_id"] = playerId;
+			request [KeyLfp.demand] = DemandLfp.missingPlayers;
+			request [KeyLfp.playerId] = playerId;
 
 			StartCoroutine (AskServer (request));
 
@@ -117,8 +128,8 @@ public class ClientLfp : MonoBehaviour {
 		case TimeLineClientLfp.ProceedToRegistrationAsPlayerAsk:
 
 			request.Clear ();
-			request ["demand"] = DemandLfp.proceedToRegistrationAsPlayer;
-			request ["username"] = userName;
+			request [KeyLfp.demand] = DemandLfp.proceedToRegistrationAsPlayer;
+			request [KeyLfp.username] = userName;
 
 			StartCoroutine (AskServer (request));
 
@@ -191,6 +202,10 @@ public class ClientLfp : MonoBehaviour {
 		if (state == TimeLineClientLfp.MissingPlayersWaitReply) {
 
 			missingPlayers = int.Parse (args [0]);
+
+			if (missingPlayers < 0) {
+				errorRaised = true;
+			}
 
 			state = TimeLineClientLfp.MissingPlayersGotAnswer;
 			LogState ();
@@ -308,6 +323,10 @@ public class ClientLfp : MonoBehaviour {
 		return registeredAsPlayer;
 	}
 
+	public bool GetErrorRaised () {
+		return errorRaised;
+	}
+
 	// ----------------------- Communication ----------------- //
 
 	public IEnumerator AskServer (Dictionary<string, string> request) {
@@ -345,6 +364,11 @@ public class ClientLfp : MonoBehaviour {
 		else {
 			serverResponse = www.downloadHandler.text;
 			Debug.Log ("ClientLfp: I got a response: '" + serverResponse + "'.");
+			if (string.IsNullOrEmpty (serverResponse)) {
+				Debug.Log ("ClientF: Response is empty. I will consider it as an error");
+				serverResponse = "EmptyResponse";
+				serverError = true;
+			}
 		}
 	}
 

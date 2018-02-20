@@ -9,13 +9,31 @@ using System.Linq;
 using AssemblyCSharp;
 
 
+class KeyUserData {
+
+	public static string email = "email";
+	public static string mechanicalId = "mechanical_id";
+	public static string nationaliy = "nationality";
+	public static string age = "age";
+	public static string gender = "gender";
+	
+}
+
+
+class BoolSi {
+	public static string visible = "Visible";
+	public static string glow = "Glow";
+}
+
+class TriggerSi {
+	public static string quit = "Quit";
+}
+
+
 public class UIControllerSi : MonoBehaviour {
 	
-	Dictionary <string, Button> buttons;
 	Dictionary <string, InputField> inputFields;
 	Dictionary <string, Toggle> toggles;
-	Dictionary <string, Text> texts;
-	Dictionary <string, Animator> animators;
 
 	Dictionary<string, string> userData;
 
@@ -30,53 +48,54 @@ public class UIControllerSi : MonoBehaviour {
 		"Age"
 	};
 
-	string [] textsNames = {	
-		"Information"
-	};
-
 	string [] toggleNames = {
 		"Male",
 		"Female",
 		"Consent"
 	};
 
-	string [] animatorNames = {
-		"CanvasUI",
-		"ButtonSubmit",
-		"ButtonLogIn",
-		"ButtonSendAgain",
-		"TextInformation",
-		"ButtonHome"
-	};
+	Text textInformation;
 
-	Dictionary<string, UnityAction> buttonAssociations;
+	Animator animCanvasUI;
+	Animator animButtonSubmit;
+	Animator animButtonLogIn;
+	Animator animButtonSendAgain;
+	Animator animTextInformation;
+	Animator animButtonHome;
+
+	Button buttonSubmit;
+	Button buttonLogIn;
+	Button buttonHome;
+	Button buttonSendAgain;
 
 	// -------------- Inherited from MonoBehavior ---------------------------- //
 
 	void Awake() {
 
-		buttonAssociations = new Dictionary<string, UnityAction> () {
+		animCanvasUI = AssociateAnim ("CanvasUI");
+		animButtonSubmit = AssociateAnim ("ButtonSubmit");
+		animButtonLogIn = AssociateAnim ("ButtonLogIn");
+		animButtonSendAgain = AssociateAnim ("ButtonSendAgain");
+		animButtonHome = AssociateAnim ("ButtonHome");
 
-			{"ButtonSubmit", ButtonSubmit},
-			{"ButtonLogIn", ButtonLogIn},
-			{"ButtonHome", ButtonHome},
-			{"ButtonSendAgain", ButtonSendAgain}
-		};
+		textInformation = AssociateText ("TextInformation");
+
+		buttonSubmit = AssociatePushButton ("ButtonSubmit", ButtonSubmit);
+		buttonLogIn = AssociatePushButton("ButtonLogIn", ButtonLogIn);
+		buttonHome = AssociatePushButton("ButtonHome", ButtonHome);
+		buttonSendAgain = AssociatePushButton ("ButtonSendAgain", ButtonSendAgain);
 			
 		gameController = GetComponent<GameControllerSi> ();
 
-		GetAnimators ();
 		GetInputFields ();
-		GetPushButtons ();
-		GetTexts ();
 		GetToggles ();
 	}
 
 	void Start () {
 		
 		inputFields [inputFieldsNames[0]].ActivateInputField ();
-		animators ["ButtonSubmit"].SetBool ("Visible", true);
-		animators ["ButtonHome"].SetBool ("Visible", true);
+		animButtonSubmit.SetBool (BoolSi.visible, true);
+		animButtonHome.SetBool (BoolSi.visible, true);
 	}
 
 	void Update () {
@@ -101,13 +120,33 @@ public class UIControllerSi : MonoBehaviour {
 		} else {
 			allowEnter = EvaluateUserData (true);
 			if (allowEnter) {
-				animators ["ButtonSubmit"].SetBool ("Glow", true);
+				animButtonSubmit.SetBool (BoolSi.glow, true);
 			}
 		}
 	}
 		
 	// ---------------- Get components ----------------------- //
 
+	Animator AssociateAnim (string name) {
+		
+		Animator anim = GetGameObject(name).GetComponent<Animator> ();
+		return anim;
+	}
+
+	Text AssociateText (string name) {
+
+		Text text = GetGameObject(name).GetComponent<Text> ();
+		return text;
+	}
+
+	Button AssociatePushButton (string name, UnityAction action) {
+
+		Button btn = GetGameObject (name).GetComponent<Button> ();
+		btn.onClick.AddListener (action);
+		return btn;
+	}
+
+	// ------------------------------------------------ //
 
 	GameObject GetGameObject (string name) {
 		
@@ -122,17 +161,7 @@ public class UIControllerSi : MonoBehaviour {
 		return go;
 	}
 
-	void GetPushButtons () {
-
-		buttons = new Dictionary<string, Button> ();
-
-		foreach(KeyValuePair<string, UnityAction> entry in buttonAssociations) {
-
-			Button btn = GetGameObject(entry.Key).GetComponent<Button> ();
-			btn.onClick.AddListener (entry.Value);
-			buttons [entry.Key] = btn;
-		}
-	}
+	// ------------------------------------------ //
 
 	void GetInputFields () {
 		
@@ -149,24 +178,6 @@ public class UIControllerSi : MonoBehaviour {
 
 		foreach (string name in toggleNames) {
 			toggles [name] = GetGameObject("Toggle" + name).GetComponent<Toggle> ();
-		}
-	}
-
-	void GetTexts () {
-	
-		texts = new Dictionary <string, Text> (); 
-
-		foreach (string name in textsNames) {
-			texts[name] = GetGameObject("Text" + name).GetComponent<Text> ();
-		}
-	}
-
-	void GetAnimators () {
-
-		animators = new Dictionary<string, Animator> ();
-
-		foreach (string name in animatorNames) {
-			animators [name] = GetGameObject(name).GetComponent<Animator> ();
 		}
 	}
 
@@ -234,15 +245,15 @@ public class UIControllerSi : MonoBehaviour {
 		
 		userData = new Dictionary <string, string> ();
 
-		userData ["email"] = inputFields["Email"].text;
-		userData ["mechanical_id"] = inputFields["MtId"].text;
-		userData ["nationality"] = inputFields["Nationality"].text;
-		userData ["age"] = inputFields["Age"].text;
+		userData [KeyUserData.email] = inputFields["Email"].text;
+		userData [KeyUserData.mechanicalId] = inputFields["MtId"].text;
+		userData [KeyUserData.nationaliy] = inputFields["Nationality"].text;
+		userData [KeyUserData.age] = inputFields["Age"].text;
 
 		if (toggles ["Male"].isOn) {
-			userData ["gender"] = "Male";
+			userData [KeyUserData.gender] = "Male";
 		} else if (toggles ["Female"].isOn) {
-			userData ["gender"] = "Female";
+			userData [KeyUserData.gender] = "Female";
 		} else {
 			throw new Exception ("UIController: Should have a gender.");
 		}
@@ -262,15 +273,16 @@ public class UIControllerSi : MonoBehaviour {
 			toggles [name].interactable = value;
 		}
 
-		buttons ["ButtonSubmit"].interactable = value;
+		buttonSubmit.interactable = value;
 		
 	}
 
 	void InformationMessage (string msg) {
 		 
-		animators ["TextInformation"].SetBool ("Visible", true);
-		animators ["TextInformation"].SetBool ("Glow", true);
-		texts ["Information"].text = msg;
+		animTextInformation.SetBool (BoolSi.visible, true);
+		animTextInformation.SetBool (BoolSi.glow, true);
+
+		textInformation.text = msg;
 	}
 
 	// --- Push buttons --- //
@@ -283,38 +295,38 @@ public class UIControllerSi : MonoBehaviour {
 			
 			InformationMessage ("Sending you a mail to '" + inputFields["Email"].text + "' with an ID and a password...");
 
-			animators ["ButtonSubmit"].SetBool ("Visible", false);
+			animButtonSubmit.SetBool (BoolSi.visible, false);
 			FormatUserData ();	
 
 			gameController.UserChooseSubmit ();
 		} else {
 			SetFormInteractable (true);
-			animators ["ButtonSubmit"].SetBool ("Glow", false);
+			animButtonSubmit.SetBool (BoolSi.glow, false);
 		}
 	}
 
 	void ButtonLogIn () {
 		
-		buttons ["ButtonLogIn"].interactable = false;
-		animators ["ButtonLogIn"].SetBool ("Visible", false);
+		buttonLogIn.interactable = false;
+		animButtonLogIn.SetBool (BoolSi.visible, false);
 
-		buttons ["ButtonLogIn"].interactable = false;
-		animators ["ButtonLogIn"].SetBool ("Visible", false);
+		buttonLogIn.interactable = false;
+		animButtonLogIn.SetBool (BoolSi.visible, false);
 
-		animators ["TextInformation"].SetBool ("Visible", false);
+		animTextInformation.SetBool (BoolSi.visible, false);
 
 		gameController.UserChooseLogIn ();
 	}
 
 	void ButtonSendAgain () {
 
-		buttons ["ButtonSendAgain"].interactable = false;
-		animators ["ButtonSendAgain"].SetBool ("Visible", false);
+		buttonSendAgain.interactable = false;
+		animButtonSendAgain.SetBool (BoolSi.visible, false);
 
-		buttons ["ButtonLogIn"].interactable = false;
-		animators ["ButtonLogIn"].SetBool ("Visible", false);
+		buttonLogIn.interactable = false;
+		animButtonLogIn.SetBool (BoolSi.visible, false);
 
-		animators ["TextInformation"].SetBool ("Visible", false);
+		animTextInformation.SetBool (BoolSi.visible, false);
 
 		InformationMessage ("Sending you a mail to '" + inputFields["Email"].text + "' with an ID and a password...");
 
@@ -323,9 +335,11 @@ public class UIControllerSi : MonoBehaviour {
 
 	void ButtonHome () {
 
-		foreach (KeyValuePair<string, Button> entry in buttons) {
-			entry.Value.interactable = false;
-		}
+		buttonSubmit.interactable = false;
+		buttonLogIn.interactable = false;
+		buttonHome.interactable = false;
+		buttonSendAgain.interactable = false;
+
 		SetFormInteractable (false);
 		gameController.UserChooseHome ();
 	}
@@ -335,20 +349,20 @@ public class UIControllerSi : MonoBehaviour {
 
 	public void QuitScene () {
 
-		foreach (string name in new string[] {
-			"ButtonHome",
-			"ButtonLogIn",
-			"ButtonSendAgain",
-			"ButtonSubmit"
-		}) {
-			animators [name].SetBool ("Visible", false);
-			buttons [name].interactable = false;
-		}
+		buttonSubmit.interactable = false;
+		buttonLogIn.interactable = false;
+		buttonHome.interactable = false;
+		buttonSendAgain.interactable = false;
 
-		animators ["TextInformation"].SetBool ("Glow", false);
-		animators ["TextInformation"].SetBool ("Visible", false);
+		animButtonHome.SetBool (Bool.visible, false);
+		animButtonLogIn.SetBool (Bool.visible, false);
+		animButtonSendAgain.SetBool (Bool.visible, false);
+		animButtonSubmit.SetBool (Bool.visible, false);
 
-		animators ["CanvasUI"].SetTrigger ("Quit");
+		animTextInformation.SetBool (BoolSi.glow, false);
+		animTextInformation.SetBool (BoolSi.visible, false);
+
+		animCanvasUI.SetTrigger (TriggerSi.quit);
 	}
 		
 	public void EndAnimationQuitScene () {
@@ -363,15 +377,15 @@ public class UIControllerSi : MonoBehaviour {
 
 		InformationMessage ("You should have receive a mail with a password.\n " +
 			"If it is the case, go to log in! Otherwise, click on 'send mail again'.");
-		animators ["TextInformation"].SetBool ("Glow", false);
+		animTextInformation.SetBool (BoolSi.glow, false);
 
-		animators ["ButtonLogIn"].SetBool ("Visible", true);
-		animators ["ButtonLogIn"].SetBool ("Glow", true);
+		animButtonLogIn.SetBool (BoolSi.visible, true);
+		animButtonLogIn.SetBool (BoolSi.glow, true);
 
-		animators ["ButtonSendAgain"].SetBool ("Visible", true);
+		animButtonSendAgain.SetBool (BoolSi.visible, true);
 
-		buttons ["ButtonLogIn"].interactable = true;
-		buttons ["ButtonSendAgain"].interactable = true;
+		buttonLogIn.interactable = true;
+		buttonSendAgain.interactable = true;
 	}
 
 	public void SendingFailed () {
@@ -380,20 +394,20 @@ public class UIControllerSi : MonoBehaviour {
 
 		SetFormInteractable (true);
 
-		animators ["TextInformation"].SetBool ("Glow", false);
+		animTextInformation.SetBool (BoolSi.glow, false);
 
-		animators ["ButtonSubmit"].SetBool ("Visible", true);
-		animators ["ButtonSubmit"].SetBool ("Glow", false);
+		animButtonSubmit.SetBool (BoolSi.visible, true);
+		animButtonSubmit.SetBool (BoolSi.glow, false);
 	}
 
 	public void AlreadyExists () {
 		
 		InformationMessage ("You are already registered! Please use the 'log in' option.\n" +
 			"If you did not receive (or lost) the mail with a password, click on 'send mail again'.");
-		animators ["TextInformation"].SetBool ("Glow", false);
-		animators ["ButtonLogIn"].SetBool ("Visible", true);
-		animators ["ButtonLogIn"].SetBool ("Glow", true);
-		animators ["ButtonSendAgain"].SetBool ("Visible", true);
+		animTextInformation.SetBool (BoolSi.glow, false);
+		animButtonLogIn.SetBool (BoolSi.visible, true);
+		animButtonLogIn.SetBool (BoolSi.glow, true);
+		animButtonSendAgain.SetBool (BoolSi.visible, true);
 	}
 }
 

@@ -218,6 +218,11 @@ public class ClientLi : MonoBehaviour {
 		else {
 			serverResponse = www.downloadHandler.text;
 			Debug.Log ("ClientLi: I got a response: '" + serverResponse + "'.");
+			if (string.IsNullOrEmpty (serverResponse)) {
+				Debug.Log ("ClientLi: Response is empty. I will consider it as an error");
+				serverResponse = "EmptyResponse";
+				serverError = true;
+			}
 		}
 	}
 

@@ -34,7 +34,8 @@ namespace AssemblyCSharp
 		ActiveEndOfTurn,
 		ActiveUpdatingScore,
 		EndingGame,
-		EndOfGame
+		EndOfGame,
+		WaitingGoCommand
 	}
 }
 

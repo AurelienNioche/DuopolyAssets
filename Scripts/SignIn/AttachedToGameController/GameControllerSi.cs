@@ -19,6 +19,8 @@ public class GameControllerSi : MonoBehaviour {
 	string sceneMain = "Scenes/Main";
 	string sceneLogIn = "Scenes/LogIn";
 
+	string tagParameters = "Parameters";
+
 	string sceneToLoad;
 	bool occupied = false;
 
@@ -52,7 +54,7 @@ public class GameControllerSi : MonoBehaviour {
 
 	void GetParameters () {
 
-		GameObject[] gos = GameObject.FindGameObjectsWithTag ("Parameters");
+		GameObject[] gos = GameObject.FindGameObjectsWithTag (tagParameters);
 
 		if (gos.Length == 0) {
 			gameObject.AddComponent<Parameters> ();

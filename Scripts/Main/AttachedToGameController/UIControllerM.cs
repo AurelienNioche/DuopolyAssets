@@ -6,12 +6,25 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 
 
+class BoolM {
+	public static string visible = "Visible";
+	public static string glow = "Glow";
+}
+
+class TriggerM {
+	public static string quit = "Quit";
+}
+
+
 public class UIControllerM : MonoBehaviour {
-	
-	Dictionary <string, Button> buttons;
-	Dictionary <string, Animator> animators;
 
 	GameControllerM gameController;
+
+	Button buttonSignIn;
+	Button buttonLogIn;
+
+	Animator animCanvasUI;
+	Animator animButtons;
 
 	// -------------- Inherited from MonoBehavior ---------------------------- //
 
@@ -19,8 +32,11 @@ public class UIControllerM : MonoBehaviour {
 		
 		gameController = GetComponent<GameControllerM> ();
 
-		GetAnimators ();
-		GetPushButtons ();
+		buttonLogIn = AssociatePushButton ("ButtonLogIn", ButtonLogIn);
+		buttonSignIn = AssociatePushButton ("ButtonSignIn", ButtonSignIn);
+
+		animCanvasUI = AssociateAnim ("CanvasUI");
+		animButtons = AssociateAnim ("Buttons");
 	}
 
 	void Start () {
@@ -31,81 +47,63 @@ public class UIControllerM : MonoBehaviour {
 
 	// ---------------- Get components ----------------------- //
 
-	void GetPushButtons () {
+	// ---------------- Get components ----------------------- //
 
-		buttons = new Dictionary<string, Button> ();
+	Animator AssociateAnim (string name) {
 
-		Dictionary<string, UnityAction> buttonAssociations = new Dictionary<string, UnityAction> () {
-
-			{"ButtonSignIn", ButtonSignIn},
-			{"ButtonLogIn", ButtonLogIn}
-		};
-
-		foreach(KeyValuePair<string, UnityAction> entry in buttonAssociations) {
-
-			GameObject go;
-			try {
-				go = GameObject.FindGameObjectWithTag (entry.Key);
-			} catch (NullReferenceException e) {
-				Debug.Log ("UIController: I could not find object with tag '" + name + "'");
-				throw e;
-			}
-
-			Button btn = go.GetComponent<Button> ();
-			btn.onClick.AddListener (entry.Value);
-			// btn.interactable = false;
-			buttons [entry.Key] = btn;
-		}
+		Animator anim = GetGameObject(name).GetComponent<Animator> ();
+		return anim;
 	}
 
-	void GetAnimators () {
+	Button AssociatePushButton (string name, UnityAction action) {
 
-		animators = new Dictionary<string, Animator> ();
-
-		string [] names = {
-			"CanvasUI",
-			"Buttons"
-		};
-
-		foreach (string name in names) {
-
-			GameObject go;
-			try {
-				go = GameObject.FindGameObjectWithTag (name);
-			} catch (NullReferenceException e) {
-				Debug.Log ("UIController: I could not find object with tag '" + name + "'");
-				throw e;
-			}
-			animators [name] = go.GetComponent<Animator> ();
-		}
+		Button btn = GetGameObject(name).GetComponent<Button> ();
+		btn.onClick.AddListener (action);
+		return btn;
 	}
 
-	// --- Push buttons --- //
+
+	// ------------------------------------------------ //
+
+	GameObject GetGameObject (string name) {
+
+		GameObject go;
+		try {
+			go = GameObject.FindGameObjectWithTag (name);
+		} catch (NullReferenceException e) {
+			Debug.Log ("UIController: I could not find object with tag '" + name + "'");
+			throw e;
+		}
+
+		return go;
+	}
+
+	// ------------------------------------------ //
 
 	void ButtonSignIn () {
 
-		Debug.Log("User clicked on button 'Sign In'.");
+		Debug.Log("UIController (Main): User clicked on button 'Sign In'.");
 
-		buttons ["ButtonSignIn"].interactable = false;
-		buttons ["ButtonLogIn"].interactable = false;
+		buttonSignIn.interactable = false;
+		buttonLogIn.interactable = false;
 		gameController.UserChooseSignIn ();
-		animators["Buttons"].SetBool ("Visible", false);
+		animButtons.SetBool (BoolM.visible, false);
 	}
 
 	void ButtonLogIn () {
 
-		Debug.Log("User clicked on button 'Log In'.");
+		Debug.Log("UIController (Main): User clicked on button 'Log In'.");
 
-		buttons ["ButtonSignIn"].interactable = false;
-		buttons ["ButtonLogIn"].interactable = false;
+		buttonSignIn.interactable = false;
+		buttonLogIn.interactable = false;
 		gameController.UserChooseLogIn ();
-		animators ["Buttons"].SetBool ("Visible", false);
+		animButtons.SetBool (BoolM.visible, false);
 	}
 
 	// --------------- Communication with gameController ---------- //
 
 	public void QuitScene () {
-		animators ["CanvasUI"].SetTrigger ("Quit");
+		animCanvasUI.SetTrigger (TriggerM.quit);
 	}
 
 	public void EndAnimationQuitScene () {

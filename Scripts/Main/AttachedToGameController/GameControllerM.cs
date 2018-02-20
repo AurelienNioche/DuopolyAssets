@@ -16,7 +16,7 @@ public class GameControllerM : MonoBehaviour {
 	bool occupied = false;
 
 	string sceneLogIn = "Scenes/LogIn";
-	string sceneSignIn = "Scences/SignIn";
+	string sceneSignIn = "Scenes/SignIn";
 
 	// -------------- Inherited from MonoBehavior ---------------------------- //
 

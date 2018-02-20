@@ -28,10 +28,12 @@ class KeyF {
 	public static string progressOnTutorial = "tutorial_progression";
 } 
 
-class CodeF {
+class CodeErrorF {
 
 	public static int haveToWait = -1;
-	public static int playerDisconnected = -3;
+	public static int timeSuperior = -2;
+	public static int opponentDisconnected = -3;
+	public static int playerDisconnected = -4;
 }
 
 
@@ -53,6 +55,9 @@ public class ClientF : MonoBehaviour {
 
 	// ------------------------------------------------------------------- //
 
+	int error;
+	bool fatalError;
+
 	string roomId;
 	string playerId;
 
@@ -63,6 +68,7 @@ public class ClientF : MonoBehaviour {
 	float progressOnTutorial;
 
 	int t;
+	int endingT;
 	int position;
 	int price;
 	int score;
@@ -136,7 +142,6 @@ public class ClientF : MonoBehaviour {
 
 			request.Clear ();
 			request [KeyF.playerId] = playerId;
-			request [KeyF.t] = t.ToString ();
 			request [KeyF.demand] = DemandF.askFirmInit;
 
 			StartCoroutine (AskServer (request));
@@ -254,20 +259,16 @@ public class ClientF : MonoBehaviour {
 
 	void ReplyFirmInit(string [] args) {
 
-		t = int.Parse (args [0]); 
+		TLClientF nextState = TLClientF.GotInit;
 
-		if (t == CodeF.playerDisconnected) {
-			// Do nothing
-		
-		} else if (t == CodeF.haveToWait) {
+		int firstArg = int.Parse (args [0]);
 
-			// Get progress of other player
-			progressOtherPlayer = args [1];		
-			Debug.Log ("ClientF: Have to wait. Progress of other player: " + progressOtherPlayer);
+		if (firstArg < 0) {
+			TreatError (firstArg, args, nextState);
 		
 		} else {
-			state = TLClientF.TreatingReply;
 
+			t = firstArg; 
 			Debug.Log ("ClientF: t is " + t + ".");
 
 			stateOfPlay = args[1];		
@@ -291,10 +292,47 @@ public class ClientF : MonoBehaviour {
 
 			opponentScore = int.Parse (args [7]);
 			Debug.Log ("ClientF: initial opponent score is " + opponentScore + ".");
-		}
 
-		state = TLClientF.GotInit;
+			endingT = int.Parse (args [8]);
+			Debug.Log ("ClientF: ending t is " + endingT + ".");
+
+			state = nextState;
+		}
 		LogState ();
+	}
+
+	// ------------------- Treat errors -------------------------------------------- //
+
+	public void TreatError (int firstArg, string[] args, TLClientF nextState) {
+
+		error = firstArg;
+
+		if (error == CodeErrorF.haveToWait) {
+
+			if (nextState == TLClientF.GotInit) {
+
+				t = firstArg;
+
+				// Get progress of other player
+				progressOtherPlayer = args [1];		
+				Debug.Log ("ClientF: Have to wait for init. Progress of other player: " + progressOtherPlayer);
+
+				state = nextState;
+			
+			} else {
+				Debug.Log ("ClientF: Have to wait.");
+				StartCoroutine (RetryDemand ());
+			}
+		
+		} else if (error == CodeErrorF.timeSuperior) {
+			Debug.Log ("ClientF: Time is superior.");
+			StartCoroutine (RetryDemand ());
+		
+		} else {
+			fatalError = true;
+			state = nextState;
+		}
+		
 	}
 
 	// --------------------- Firm communication ------------------------------------------ //
@@ -320,28 +358,18 @@ public class ClientF : MonoBehaviour {
 
 		TLClientF nextState = TLClientF.GotPassiveOpponentChoice;
 
-		int serverT = int.Parse (args [0]); 
+		int firstArg = int.Parse (args [0]);
 
-		if (serverT == t) {
+		if (firstArg < 0) {
+			TreatError (firstArg, args, nextState);
 
-			state = TLClientF.TreatingReply;
+		} else {
 
-			opponentPosition = int.Parse (args[1]);
+			opponentPosition = int.Parse (args [1]);
 			opponentPrice = int.Parse (args [2]); 
 
 			state = nextState;
 			LogState ();
-
-		} else if (serverT == CodeF.haveToWait) {
-			Debug.Log ("ClientF: Have to wait.");
-			StartCoroutine (RetryDemand ());
-
-		} else if (serverT == CodeF.playerDisconnected) {
-			t = serverT;
-			state = nextState;
-
-		} else {
-			Debug.Log ("ClientF: Time problem ('t' given by server is '" + serverT + "').");
 		}
 	}
 
@@ -354,11 +382,12 @@ public class ClientF : MonoBehaviour {
 
 		TLClientF nextState = TLClientF.GotPassiveConsumerChoices;
 
-		int serverT = int.Parse (args [0]); 
+		int firstArg = int.Parse (args [0]);
 
-		if (serverT == t) {
+		if (firstArg < 0) {
+			TreatError (firstArg, args, nextState);
 
-			state = TLClientF.TreatingReply;
+		} else {
 
 			for (int i = 0; i < GameFeatures.nPositions; i++) {
 				consumerChoicesPassive [i] = int.Parse (args [1 + i]);
@@ -370,22 +399,8 @@ public class ClientF : MonoBehaviour {
 				t++;
 			}
 
-			// --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// ComputeScores ("passive");
-
 			state = TLClientF.GotPassiveConsumerChoices;
 			LogState ();
-
-		} else if (serverT == CodeF.haveToWait) {
-			Debug.Log ("ClientF: Have to wait.");
-			StartCoroutine (RetryDemand ());
-
-		} else if (serverT == CodeF.playerDisconnected) {
-			t = serverT;
-			state = nextState;
-
-		} else {
-			Debug.Log ("ClientF: Time problem ('t' given by server is '" + serverT + "').");
 		}
 	}
 
@@ -402,23 +417,16 @@ public class ClientF : MonoBehaviour {
 
 		TLClientF nextState = TLClientF.GotActiveChoiceRecording;
 
-		int serverT = int.Parse (args [0]); 
+		int firstArg = int.Parse (args [0]);
 
-		if (serverT == t) {
+		if (firstArg < 0) {
+			TreatError (firstArg, args, nextState);
+
+		} else {
 
 			state = TLClientF.GotActiveChoiceRecording;
 			LogState ();
 
-		} else if (serverT == CodeF.haveToWait) {
-			Debug.Log ("ClientF: Have to wait.");
-			StartCoroutine (RetryDemand ());
-
-		} else if (serverT == CodeF.playerDisconnected) {
-			t = serverT;
-			state = nextState;
-
-		} else {
-			Debug.Log ("ClientF: Time problem ('t' given by server is '" + serverT + "').");
 		}
 	}
 
@@ -431,11 +439,12 @@ public class ClientF : MonoBehaviour {
 
 		TLClientF nextState = TLClientF.GotActiveConsumerChoices;
 
-		int serverT = int.Parse (args [0]); 
+		int firstArg = int.Parse (args [0]);
 
-		if (serverT == t) {
-
-			state = TLClientF.TreatingReply;
+		if (firstArg < 0) {
+			TreatError (firstArg, args, nextState);
+		
+		} else {
 
 			for (int i = 0; i < GameFeatures.nPositions; i++) {
 				consumerChoicesActive [i] = int.Parse (args [1 + i]);
@@ -448,18 +457,6 @@ public class ClientF : MonoBehaviour {
 
 			state = nextState;
 			LogState ();
-
-		} else if (serverT == CodeF.haveToWait) {
-			Debug.Log ("ClientF: Have to wait.");
-			StartCoroutine (RetryDemand ());
-
-
-		} else if (serverT == CodeF.playerDisconnected) {
-			t = serverT;
-			state = nextState;
-
-		} else {
-			Debug.Log ("ClientF: Time problem ('t' given by server is '" + serverT + "').");
 		}
 	}
 
@@ -552,8 +549,20 @@ public class ClientF : MonoBehaviour {
 		return t;
 	}
 
+	public int GetEndingT () {
+		return endingT;
+	}
+
 	public string GetProgressOtherPlayer () {
 		return progressOtherPlayer;
+	}
+
+	public bool GotFatalError () {
+		return fatalError;
+	}
+
+	public int GetError () {
+		return error;
 	}
 
 
@@ -594,6 +603,11 @@ public class ClientF : MonoBehaviour {
 		else {
 			serverResponse = www.downloadHandler.text;
 			Debug.Log ("ClientF: I got a response: '" + serverResponse + "'.");
+			if (string.IsNullOrEmpty (serverResponse)) {
+				Debug.Log ("ClientF: Response is empty. I will consider it as an error");
+				serverResponse = "EmptyResponse";
+				serverError = true;
+			}
 		}
 	}
 

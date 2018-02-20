@@ -3,7 +3,6 @@
 namespace AssemblyCSharp
 {
 	public enum TLClientF {
-		TreatingReply,
 		WaitCommand,
 		TutorialDone,
 		TutorialDoneWaitReply,

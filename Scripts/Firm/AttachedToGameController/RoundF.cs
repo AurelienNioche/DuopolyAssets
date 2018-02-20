@@ -22,10 +22,6 @@ public class RoundF : MonoBehaviour {
 	float timeOfInit;
 	float timeForInitialAnimation = 1.0f;
 
-	int haveToWait = -1;
-	int playerDisconnected = -3;
-
-
 	// Use this for initialization
 	void Start () {
 		stateGame = TLRoundF.Init;
@@ -63,12 +59,18 @@ public class RoundF : MonoBehaviour {
 
 			if (client.IsState (TLClientF.GotInit)) {
 
-				if (client.GetTime () == haveToWait) {
+				if (client.GotFatalError ()) {
+
+					stateGame = TLRoundF.EndingGame;
+					LogGameState ();
+					break;
+				}
+
+				if (client.GetTime () == CodeErrorF.haveToWait) {
+				
 					client.AskInit ();
 					uiController.ShowMessageProgressOtherPlayer (client.GetProgressOtherPlayer ());
-				} else if (client.GetTime() == playerDisconnected) {
-					stateGame = TLRoundF.EndOfGame;
-					gameController.PlayerDisconnected ();
+				
 				} else {
 	
 					float delta = Time.time - timeOfInit;
@@ -82,36 +84,23 @@ public class RoundF : MonoBehaviour {
 
 		case TLRoundF.GotInfo:
 
+			gameController.GotInitInfo ();
+			stateGame = TLRoundF.WaitingGoCommand;
+			// RoundNextStep ();
+			break;
+
+		case TLRoundF.Preparation:
+
 			// Instruction to scoreManager
 			scoreManager.SetCumulativeScores (client.GetScore (), client.GetOpponentScore ());
 
 			// Instructions for uiController
-			uiController.Initialize (client.GetPosition (), client.GetPrice (), client.GetOpponentPrice (), 
+			uiController.PrepareNewRound (client.GetPosition (), client.GetPrice (), client.GetOpponentPrice (), 
 				client.GetScore (), client.GetOpponentScore ());
-
-			uiController.ChangeSelectedTurn (Turn.none);
-
-			uiController.HideMenu ();
-
-			ac.HUDOpponent.SetBool(Bool.visible, true);
-			ac.HUDPlayer.SetBool(Bool.visible, true);
-
-			ac.turns.SetBool(Bool.visible, true);
-
-			ac.cumulativeScore.SetBool(Bool.visible, true);
-			ac.scores.SetBool(Bool.visible, true);
+			uiController.SetProgress (ComputeProgress());
 
 			// Instructions for populationController
-			populationController.PlaceAgentsToInitialPosition (client.GetPosition (), client.GetOpponentPosition ());
-
-			populationController.MakePlayerAppear ();
-			populationController.MakeOpponentAppear ();
-			populationController.MakeAllConsumerAppear ();
-
-			RoundNextStep ();
-			break;
-
-		case TLRoundF.Preparation:
+			populationController.PrepareNewRound (client.GetPosition (), client.GetOpponentPosition ());
 
 			if (client.GetInitialStateOfPlay () == "active") {
 
@@ -125,8 +114,6 @@ public class RoundF : MonoBehaviour {
 				// Update state
 				stateGame = TLRoundF.PassiveBeginningOfTurn;
 			}
-
-			uiController.TurnSelectionAnimation (true);
 
 			LogGameState ();
 			break;
@@ -148,8 +135,10 @@ public class RoundF : MonoBehaviour {
 
 			if (client.IsState (TLClientF.GotPassiveOpponentChoice)) {
 
-				if (client.GetTime () == playerDisconnected) {
+				if (client.GotFatalError ()) {
+
 					stateGame = TLRoundF.EndingGame;
+					LogGameState ();
 					break;
 				}
 
@@ -182,8 +171,10 @@ public class RoundF : MonoBehaviour {
 
 			if (client.IsState (TLClientF.GotPassiveConsumerChoices)) {
 
-				if (client.GetTime () == playerDisconnected) {
+				if (client.GotFatalError ()) {
+
 					stateGame = TLRoundF.EndingGame;
+					LogGameState ();
 					break;
 				}
 
@@ -236,9 +227,13 @@ public class RoundF : MonoBehaviour {
 
 			if (client.GetEndGame () == 1) {
 
+				uiController.SetProgress (100.0f);
+
 				stateGame = TLRoundF.EndingGame;
 
 			} else {
+
+				uiController.SetProgress (ComputeProgress ());
 
 				// Update state
 				stateGame = TLRoundF.ActiveBeginningOfTurn;
@@ -293,8 +288,10 @@ public class RoundF : MonoBehaviour {
 
 			if (client.IsState (TLClientF.GotActiveChoiceRecording)) {
 
-				if (client.GetTime () == playerDisconnected) {
+				if (client.GotFatalError ()) {
+
 					stateGame = TLRoundF.EndingGame;
+					LogGameState ();
 					break;
 				}
 
@@ -314,8 +311,10 @@ public class RoundF : MonoBehaviour {
 
 			if (client.IsState (TLClientF.GotActiveConsumerChoices)) {
 
-				if (client.GetTime () == playerDisconnected) {
+				if (client.GotFatalError ()) {
+
 					stateGame = TLRoundF.EndingGame;
+					LogGameState ();
 					break;
 				}
 
@@ -368,10 +367,16 @@ public class RoundF : MonoBehaviour {
 		case TLRoundF.ActiveEndOfTurn:
 
 			if (client.GetEndGame () == 1) {
+
+				uiController.SetProgress (100.0f);
+
 				// Update state
 				stateGame = TLRoundF.EndingGame;
 
 			} else {
+
+				uiController.SetProgress (ComputeProgress ());
+
 				// Update state
 				stateGame = TLRoundF.PassiveBeginningOfTurn;
 			}
@@ -382,28 +387,19 @@ public class RoundF : MonoBehaviour {
 
 		case TLRoundF.EndingGame:
 
-			ac.blackBackground.SetBool (Bool.visible, true);
-
-			ac.turns.SetBool (Bool.visible, false);
-
-			ac.HUDPlayer.SetBool (Bool.visible, false);
-			ac.HUDOpponent.SetBool (Bool.visible, false);
-
-			ac.cumulativeScore.SetBool (Bool.visible, false);
-			ac.scores.SetBool (Bool.visible, false);
+			uiController.HideObjects ();
 
 			populationController.MakePlayerDisappear ();
 			populationController.MakeOpponentDisappear ();
 			populationController.MakeAllConsumersDisappear ();
 
+			stateGame = TLRoundF.EndOfGame;
 
-			if (client.GetTime () == playerDisconnected) {
-				gameController.PlayerDisconnected ();
+			if (client.GotFatalError ()) {
+				gameController.FatalError ();
 			} else {
 				gameController.EndOfRound ();
 			}
-
-			RoundNextStep ();
 			break;
 
 		case TLRoundF.EndOfGame:
@@ -415,10 +411,44 @@ public class RoundF : MonoBehaviour {
 		}
 	}
 
-	// ------------------------------------------------------------------------------ //
+	// ---------------- Go to next step ----------------------------------------- //
+
+	void RoundNextStep () {
+		stateGame += 1;
+		LogGameState ();
+	}
+
+	void LogGameState () {
+		Debug.Log ("RoundF: New state is '" + stateGame + "'.");
+	}
+		
+	// ---------------- For assessing progression ----------------------------------- //
+
+	float ComputeProgress () {
+		float floatT = (float) client.GetTime ();
+		float floatEndingT = (float) client.GetEndingT ();
+		return floatT / floatEndingT;
+	}
+
+	// ---------------- For facilitating coroutines ----------------------------------//
+
+	IEnumerator ActionWithDelay(Action methodName, float seconds) {
+		yield return new WaitForSeconds(seconds);
+		methodName ();
+	}
+
+	// ---------------- Called from gameController ----------------------------- //
 
 	public void Begin () {
+		stateGame = TLRoundF.Preparation;
+	}
+
+	public void Initialize () {
 		stateGame = TLRoundF.Init;
+	}
+
+	public int GetScore () {
+		return scoreManager.GetScoreCumulative ();
 	}
 
 	// ----------------- Called from populationController ---------------------- //
@@ -431,7 +461,7 @@ public class RoundF : MonoBehaviour {
 		RoundNextStep ();
 	}
 
-	// 
+	//  -------------- Called from UI (through gameController -------------- //
 
 	public void UserCollect () {
 		RoundNextStep ();
@@ -441,28 +471,8 @@ public class RoundF : MonoBehaviour {
 		RoundNextStep ();
 	}
 
-	public int GetScore () {
-		return scoreManager.GetScoreCumulative ();
+	public void UserChangePosition () {
+		uiController.AuthorizeValidation (true);
 	}
 
-
-
-	void RoundNextStep () {
-		stateGame += 1;
-		LogGameState ();
-	}
-
-	// -------------------------------------------------------------------------------- //
-
-	void LogGameState () {
-		Debug.Log ("RoundF: New state is '" + stateGame + "'.");
-	}
-
-	// ----------------------------------------------------------------------------//
-
-	IEnumerator ActionWithDelay(Action methodName, float seconds) {
-		yield return new WaitForSeconds(seconds);
-
-		methodName ();
-	}
 }

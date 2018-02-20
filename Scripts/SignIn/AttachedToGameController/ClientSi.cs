@@ -6,6 +6,23 @@ using AssemblyCSharp;
 using UnityEngine.Networking;
 
 
+class KeySi {
+
+	public static string demand = "demand";
+} 
+
+class DemandSi {
+
+	public static string register = "register";
+	public static string sendPasswordAgain = "send_password_again";
+}
+
+class ErrorSi {
+	public static string sendingAborted = "sending_aborted";
+	public static string alreadyExists = "already_exists";
+}
+
+
 public class ClientSi : MonoBehaviour {
 
 	// ---------- For communication with the server -------------------------- //
@@ -73,7 +90,7 @@ public class ClientSi : MonoBehaviour {
 		case TimeLinePlayerSi.SendForm:
 
 			request.Clear ();
-			request ["demand"] = "register";
+			request [KeySi.demand] = DemandSi.register;
 			foreach (KeyValuePair<string, string> entry in userData) {
 				request [entry.Key] = entry.Value;
 			}
@@ -86,7 +103,7 @@ public class ClientSi : MonoBehaviour {
 		case TimeLinePlayerSi.SendAgain:
 
 			request.Clear ();
-			request ["demand"] = "send_password_again";
+			request [KeySi.demand] = DemandSi.sendPasswordAgain;
 			foreach (KeyValuePair<string, string> entry in userData) {
 				request [entry.Key] = entry.Value;
 			}
@@ -123,10 +140,10 @@ public class ClientSi : MonoBehaviour {
 				state = TimeLinePlayerSi.FormSent;
 			} else {
 				string reason = args [1];
-				if (reason == "sending_aborted") {
+				if (reason == ErrorSi.sendingAborted) {
 					gameController.SendingFailed ();
 					state = TimeLinePlayerSi.SendingAborted;
-				} else if (reason == "already_exists") {
+				} else if (reason == ErrorSi.alreadyExists) {
 					gameController.AlreadyExists ();
 					state = TimeLinePlayerSi.AlreadyExists;
 				} else {
@@ -144,9 +161,9 @@ public class ClientSi : MonoBehaviour {
 
 		if (state == TimeLinePlayerSi.SendAgainWaitReply) {
 
-			int ok = int.Parse (args [0]);
+			bool ok = int.Parse (args [0]) == 1;
 
-			if (ok == 1) {
+			if (ok) {
 				gameController.SendAgainGotReply ();
 				state = TimeLinePlayerSi.SendAgainGotReply;
 			} else {
@@ -192,17 +209,11 @@ public class ClientSi : MonoBehaviour {
 
 	void MakeTheCorrectCall (string what, string [] strArgs) {
 
-		switch (what) {
-
-		case "register":
+		if (what == DemandSi.register) {
 			ReplyRegister (strArgs);
-			break;
-
-		case "send_password_again":
+		} else if (what == DemandSi.sendPasswordAgain) {
 			ReplyMailSendAgain (strArgs);
-			break;
-
-		default:
+		} else {
 			throw new System.Exception ("I received '" + what + "' with args '" + strArgs + "' but I can not catch that.");
 		}
 	}
@@ -255,6 +266,11 @@ public class ClientSi : MonoBehaviour {
 		else {
 			serverResponse = www.downloadHandler.text;
 			Debug.Log ("ClientSi: I got a response: '" + serverResponse + "'.");
+			if (string.IsNullOrEmpty (serverResponse)) {
+				Debug.Log ("ClientSi: Response is empty. I will consider it as an error");
+				serverResponse = "EmptyResponse";
+				serverError = true;
+			}
 		}
 	}
 

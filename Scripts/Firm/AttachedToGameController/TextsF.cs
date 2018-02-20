@@ -27,8 +27,13 @@ public class TextsF : MonoBehaviour {
 	public Text buttonMenu;
 	[HideInInspector]
 	public Text menuCentral;
-	[HideInInspector]
 
+	[HideInInspector]
+	public Text currentStep;
+	[HideInInspector]
+	public Text progression;
+
+	[HideInInspector]
 	public Text indicatorCentral;
 	[HideInInspector]
 	public Text indicatorValidation;
@@ -50,6 +55,9 @@ public class TextsF : MonoBehaviour {
 
 		indicatorCentral = Associate("TextIndicatorCentral");
 		indicatorValidation = Associate("TextIndicatorValidation");
+
+		currentStep = Associate ("TextCurrentStep");
+		progression = Associate ("TextProgression");
 	}
 
 	Text Associate (string name) {

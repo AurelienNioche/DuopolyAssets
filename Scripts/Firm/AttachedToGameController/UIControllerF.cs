@@ -98,9 +98,36 @@ public class UIControllerF : MonoBehaviour {
 		}
 	}
 		
-	// ------------ Called once player got init information from server -------- //
+	// ------------ Preparation for game  ------------------------------------------ //
 
-	public void Initialize (int playerPosition, int playerPrice, int opponentPrice, int initScore, int initScoreOpponent) {
+	public void PrepareNewRound (int playerPosition, int playerPrice, int opponentPrice, int initScore, int initScoreOpponent) {
+
+		Initialize (playerPosition, playerPrice, opponentPrice, initScore, initScoreOpponent);
+
+		ChangeSelectedTurn (Turn.none);
+
+		ac.HUDOpponent.SetBool(Bool.visible, true);
+		ac.HUDPlayer.SetBool(Bool.visible, true);
+
+		ac.turns.SetBool(Bool.visible, true);
+
+		ac.cumulativeScore.SetBool(Bool.visible, true);
+		ac.scores.SetBool(Bool.visible, true);
+
+		TurnSelectionAnimation (true);
+	}
+
+	public void PrepareTutorial (int playerPosition, int playerPrice, int opponentPrice, int initScore, int initScoreOpponent) {
+		Initialize (playerPosition, playerPrice, opponentPrice, initScore, initScoreOpponent);
+	}
+
+	void Initialize (int playerPosition, int playerPrice, int opponentPrice, int initScore, int initScoreOpponent) {
+
+		// Hide menu
+		HideMenu ();
+
+		// Show current progress
+		ShowCurrentStepAndProgress (gameController.GetCurrentStep ());
 
 		// Initialize scores
 		ResetScoreTexts ();
@@ -136,6 +163,8 @@ public class UIControllerF : MonoBehaviour {
 		AuthorizePriceSelection (true);
 	}
 
+	// ------------------------------------------ //
+
 	public void AuthorizeDeplacement (bool value) {
 
 		buttons[ButtonNames.right].interactable = value;
@@ -160,19 +189,17 @@ public class UIControllerF : MonoBehaviour {
 
 		buttons[ButtonNames.cashRegister].interactable = value;
 	}
-
-	public void AuthorizeButtonMenu (bool value) {
-    
-		buttons[ButtonNames.menu].interactable = value;
-    }
+		
+	public void SetButtonInteractable (string buttonName, bool value) {
+		buttons [buttonName].interactable = value;
+	}
 
 	// ------------ Click on... --------------- //
 
 	public void ButtonYes () {
 
-		Debug.Log ("UIController: User validates his choice.");
-		Debug.Log ("UIController: Selected position is " + selectedPosition.ToString () + " .");
-		Debug.Log ("UIController: Selected price is " + selectedPrice.ToString () + " .");
+		Debug.Log ("UIController:  Selected position " + selectedPosition.ToString () + 
+			"; selected price " + selectedPrice.ToString () + " .");
 
 		AuthorizeValidation (false);
 		AuthorizeDeplacement (false);
@@ -195,9 +222,7 @@ public class UIControllerF : MonoBehaviour {
 		Debug.Log ("UIController: Click on 'ButtonMinus'.");
 		if (selectedPrice > GameFeatures.minimumPrice) {
 			selectedPrice -= 1;
-			UpdatePriceDisplaying ();
-
-			gameController.UserChangePrice ();
+			ChangePriceAction ();
 		}
 	}
 
@@ -205,10 +230,9 @@ public class UIControllerF : MonoBehaviour {
 		
 		Debug.Log ("UIController: Click on 'ButtonPlus'.");
 		if (selectedPrice < GameFeatures.maximumPrice) {
-			selectedPrice += 1;
-			UpdatePriceDisplaying ();
 
-			gameController.UserChangePrice ();
+			selectedPrice += 1;
+			ChangePriceAction ();
 		}
 	}
 
@@ -246,13 +270,14 @@ public class UIControllerF : MonoBehaviour {
 
 	public void ButtonIndicator (string buttonName) {
 
-		Debug.Log ("ButtonIndicator with name '" + buttonName + "' has been pushed.");
+		Debug.Log ("UIController: 'ButtonIndicator' with name '" + buttonName + "' has been pushed.");
 		gameController.UserGotIt ();
 	}
 
 	public void ButtonMenu () {
 
 		buttons [ButtonNames.menu].interactable = false;
+		ac.buttonMenu.SetBool (Bool.visible, false);
 
 		Debug.Log ("UIController: Click on 'ButtonMenu'.");
 
@@ -262,6 +287,8 @@ public class UIControllerF : MonoBehaviour {
 	// -------------------------------- //
 
 	void MoveAction () {
+
+		// When a player moves...
 		populationController.MovePlayer (selectedPosition);
 
 		AuthorizeValidation (false);
@@ -277,10 +304,13 @@ public class UIControllerF : MonoBehaviour {
 		gameController.UserChangePosition ();
 	}
 
-	// ------------------------------------------- //
+	// ------------ Change price -----------------//
 
-	public void SetButtonInteractable (string buttonName, bool value) {
-		buttons [buttonName].interactable = value;
+	void ChangePriceAction () {
+
+		// When a player changes its prices...
+		UpdatePriceDisplaying ();
+		gameController.UserChangePrice ();
 	}
 
 	// ------------------ HUD -------------------------------- //
@@ -404,36 +434,26 @@ public class UIControllerF : MonoBehaviour {
 
 		Animator[] toHide = {
 
-			ac.HUDPlayer,
-			ac.HUDOpponent, 
+			// HUD
+			ac.HUDPlayer, ac.HUDOpponent, 
 
-			ac.turns,
-			ac.turnPlayer,
-			ac.turnOpponent,
+			// Pictures for indicating turn
+			ac.turns, ac.turnPlayer, ac.turnOpponent, ac.turnConsumers1, ac.turnConsumers2,
 
-			ac.turnConsumers1,
-			ac.turnConsumers2,
-			ac.scores,
-			ac.cumulativeScore,
-			ac.buttonYes,
-			ac.buttonCashRegister,
-			ac.strategicButtons,
+			// Scores
+			ac.scores, ac.cumulativeScore,
 
-			// All the indicators
-			ac.indicatorMessenger,
-			ac.indicatorYou,
-			ac.indicatorOpponent,
-			ac.indicatorConsumer,
-			ac.indicatorCentral,
-			ac.indicatorScore,
-			ac.indicatorScoreTurn,
-			ac.indicatorTurnPlayer,
-			ac.indicatorChangePosition,
-			ac.indicatorChangePrice,
-			ac.indicatorValidation,
-			ac.indicatorTurnConsumers1,
-			ac.indicatorTurnOpponent,
-			ac.indicatorTurnConsumers2
+			// Buttons
+			ac.buttonYes, ac.buttonCashRegister, ac.strategicButtons,
+
+			// All tutorial messages
+			ac.indicatorMessenger, ac.indicatorYou, ac.indicatorOpponent, ac.indicatorConsumer,
+			ac.indicatorCentral, ac.indicatorScore, ac.indicatorScoreTurn, ac.indicatorTurnPlayer,
+			ac.indicatorChangePosition, ac.indicatorChangePrice, ac.indicatorValidation,
+			ac.indicatorTurnConsumers1, ac.indicatorTurnOpponent, ac.indicatorTurnConsumers2,
+
+			// Indicator of progression
+			ac.currentStep
 		};
 
 		foreach (Animator anim in toHide) {
@@ -443,8 +463,7 @@ public class UIControllerF : MonoBehaviour {
 		ac.blackBackground.SetBool (Bool.visible, true);
 
 		string[]  scoreTriggers = {
-			Trigger.addScore, 
-			Trigger.floatScore,
+			Trigger.addScore, Trigger.floatScore,
 			Trigger.floatConsumerAndCurrentScore,
 			Trigger.glowCurrentScore
 		};
@@ -454,10 +473,8 @@ public class UIControllerF : MonoBehaviour {
 		}
 
 		Animator[] turnAC = {
-			ac.turnPlayer,
-			ac.turnOpponent,
-			ac.turnConsumers1,
-			ac.turnConsumers2,
+			ac.turnPlayer, ac.turnOpponent, 
+			ac.turnConsumers1, ac.turnConsumers2,
 		};
 
 		foreach (Animator anim in turnAC) {
@@ -466,20 +483,13 @@ public class UIControllerF : MonoBehaviour {
 		}
 	}
 
-	// --------------------------------------------- //
+	// -----------  Commands relative to menu ----------- //
 
 	public void ShowMenu () {
 
 		Debug.Log ("UIController: Show menu");
-
+		ac.blackBackground.SetBool (Bool.visible, true);
 		ac.logo.SetBool (Bool.visible, true);
-		ac.textMenuCentral.SetBool (Bool.visible, true);
-		ac.textMenuCentral.SetBool (Bool.glow, false);
-
-		ac.buttonMenu.SetBool (Bool.visible, true);
-		ac.buttonMenu.SetBool (Bool.glow, true);
-
-		buttons [ButtonNames.menu].interactable = true;
 	}
 
 	public void HideMenu () {
@@ -489,6 +499,12 @@ public class UIControllerF : MonoBehaviour {
 		ac.blackBackground.SetBool (Bool.visible, false);
 		ac.textMenuCentral.SetBool (Bool.visible, false);
 		ac.logo.SetBool (Bool.visible, false);
+	}
+
+	public void ShowButtonMenu () {
+		ac.buttonMenu.SetBool (Bool.visible, true);
+		ac.buttonMenu.SetBool (Bool.glow, true);
+		buttons [ButtonNames.menu].interactable = true;
 	}
 
 	// ------------ Getters for user choice ------------- //
@@ -501,9 +517,40 @@ public class UIControllerF : MonoBehaviour {
 		return selectedPrice;
 	}
 
-	// -------------------------------------------------- //
+	// ------------------- Progress ------------------------------- //
+
+	public void ShowCurrentStepAndProgress(string step) {
+
+		ac.currentStep.SetBool (Bool.visible, true);
+
+		string text = "";
+
+		if (step == GameStep.tutorial) {
+			text += "Tutorial";
+		} else if (step == GameStep.pve) {
+			text += "First round";
+		} else if (step == GameStep.pvp) {
+			text += "Final round";
+		} else {
+			throw new Exception ("UIControllerF: Step not understood");
+		}
+
+		texts.currentStep.text = text;
+		texts.progression.text = (0.00f).ToString ("0%");
+	}
+
+	public void SetProgress (float progress) {
+		texts.progression.text = progress.ToString("0%");
+	}
+
+	public void HideStepAndProgress () {
+		ac.currentStep.SetBool (Bool.visible, false);
+	}
+
+	// ----------------  Display messages  -------------------------------- //
 
 	public void ShowMessageFinal () {
+
 		ac.textMenuCentral.SetBool (Bool.glow, false);
 		texts.menuCentral.text = "You finished the final round! Well done!\n" +
 			"Score: " + gameController.GetScore().ToString() + "\n\n" + 
@@ -511,33 +558,41 @@ public class UIControllerF : MonoBehaviour {
 			"with a bonus corresponding to your scores on the two rounds.";
 
 		ac.textMenuCentral.SetBool(Bool.visible, true);
+		ac.textMenuCentral.SetBool (Bool.glow, true);
 	}
 
 	public void ShowMessageAlreadyPlayed () {
+
 		ac.textMenuCentral.SetBool (Bool.glow, false);
-		texts.menuCentral.text = "We know that this game is the best game you ever played, \\nbut it is a single shot experiment!"; 
+		texts.menuCentral.text = "We know that this game is the best game you ever played, " +
+			"\nbut it is a single shot experiment!"; 
 		ac.textMenuCentral.SetBool (Bool.visible, true);
+		ac.textMenuCentral.SetBool (Bool.glow, true);
 	}
 
 	public void ShowMessageWaiting () {
+
 		ac.textMenuCentral.SetBool (Bool.glow, true);
-		texts.menuCentral.text = "Waiting for the other player...\n";
+		texts.menuCentral.text = "Setting up...\n";
 		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
 	public void ShowMessageTutorial () {
+
 		ac.textMenuCentral.SetBool (Bool.glow, false);
 		texts.menuCentral.text = "Let's begin with a small tutorial!";
 		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
 	public void ShowMessagePVE () {
+
 		ac.textMenuCentral.SetBool (Bool.glow, false);
 		texts.menuCentral.text = "It's time to play the round against the computer!";
 		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
 	public void ShowMessagePVP () {
+
 		ac.textMenuCentral.SetBool (Bool.glow, false);
 		int score = gameController.GetScore ();
 		if (score > 0) {
@@ -553,13 +608,15 @@ public class UIControllerF : MonoBehaviour {
 	}
 
 	public void ShowMessageProgressOtherPlayer (string progressOtherPlayer) {
+
 		ac.textMenuCentral.SetBool (Bool.glow, true);
-		texts.menuCentral.text = "Waiting for the other player...\n" +
-			"Progress of the other player on the previous phase: " + progressOtherPlayer + "%";
+		texts.menuCentral.text = "Waiting for the other player to complete...\n\n" +
+			"Current progress of the other player: " + progressOtherPlayer + "%";
 		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
-	public void ShowMessagePLayerDisconnected () {
+	public void ShowMessageOpponentDisconnected () {
+
 		ac.textMenuCentral.SetBool (Bool.glow, false);
 		texts.menuCentral.text = "Unfortunately, the other player is disconnected\n" +
 			"There is no choice but to put an end to the game\n\n" +
@@ -568,5 +625,14 @@ public class UIControllerF : MonoBehaviour {
 
 		ac.textMenuCentral.SetBool(Bool.visible, true);
 	}
+
+	public void ShowMessagePlayerDisconnected () {
+
+		ac.textMenuCentral.SetBool (Bool.glow, false);
+		texts.menuCentral.text = "After a long delay without news from you,\n" +
+			"you have been banned in order to not block the other player";
+		ac.textMenuCentral.SetBool(Bool.visible, true);
+	}
+
 
 }

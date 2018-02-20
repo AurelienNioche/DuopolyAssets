@@ -4,9 +4,10 @@ namespace AssemblyCSharp
 {
 	public enum TLGeneralF
 	{
-		Menu,
+		Init,
 		Tuto,
 		Game,
+		Waiting,
 		None
 	}
 }

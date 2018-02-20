@@ -88,6 +88,10 @@ public class Mouth : MonoBehaviour {
 		}
 		else {
 			serverResponse = www.downloadHandler.text;
+			if (string.IsNullOrEmpty (serverResponse)) {
+				serverResponse = "EmptyResponse";
+				serverError = true;
+			}
 		}
 
 		isOccupied = false;

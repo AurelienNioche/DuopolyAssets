@@ -5,12 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+class Bool {
+	public static string visible = "Visible";
+	public static string glow = "Glow";
+}
+
 
 public class UIControllerLfp : MonoBehaviour {
-	
-	Dictionary <string, Button> buttons;
-	Dictionary <string, Text> texts;
-	Dictionary <string, Animator> animators;
 
 	GameControllerLfp gameController;
 
@@ -21,36 +22,40 @@ public class UIControllerLfp : MonoBehaviour {
 
 	Dictionary<string, UnityAction> buttonAssociations;
 
-	string [] textsNames = {
-		"Central"
-	};
+	Text textCentral;
 
-	string [] animatorNames = {
-		"ButtonParticipation",
-		"Logo", 
-		"TextCentral"
-	};
+	Animator animLogo; 
+	Animator animButtonParticipation;
+	Animator animTextCentral;
+
+	Button buttonParticipation;
 
 
 	// -------------- Inherited from MonoBehavior ---------------------------- //
 
 	void Awake() {
 
-		buttonAssociations = new Dictionary<string, UnityAction> () {
-			{"ButtonParticipation", ButtonParticipation}
-		};
+		// Associate animators
+		animLogo = AssociateAnim ("Logo"); 
+		animButtonParticipation = AssociateAnim ("ButtonParticipation");
+		animTextCentral = AssociateAnim ("TextCentral");
 
+		// ...texts
+		textCentral = AssociateText ("TextCentral");
+
+		// ...buttons
+		buttonParticipation = AssociatePushButton ("ButtonParticipation", ButtonParticipation);
+
+		// ...and get GameController
 		gameController = GetComponent<GameControllerLfp> ();
-
-		GetAnimators ();
-		GetPushButtons ();
-		GetTexts ();
 	}
 
 	void Start () {
-		animators ["Logo"].SetBool ("Visible", true);
-		animators ["TextCentral"].SetBool ("Visible", true);
-		animators ["TextCentral"].SetBool ("Glow", true);
+
+		animLogo.SetBool (Bool.visible, true);
+
+		animTextCentral.SetBool (Bool.visible, true);
+		animTextCentral.SetBool (Bool.glow, true);
 	}
 
 	void Update () {
@@ -58,51 +63,52 @@ public class UIControllerLfp : MonoBehaviour {
 
 	// ---------------- Get components ----------------------- //
 
-	void GetPushButtons () {
+	Animator AssociateAnim (string name) {
 
-		buttons = new Dictionary<string, Button> ();
-
-		foreach(KeyValuePair<string, UnityAction> entry in buttonAssociations) {
-
-			GameObject go;
-			try {
-				go = GameObject.FindGameObjectWithTag (entry.Key);
-			} catch (NullReferenceException e) {
-				Debug.Log ("UIController: I could not find object with tag '" + name + "'");
-				throw e;
-			}
-
-			Button btn = go.GetComponent<Button> ();
-			btn.onClick.AddListener (entry.Value);
-			buttons [entry.Key] = btn;
-		}
+		Animator anim = GetGameObject(name).GetComponent<Animator> ();
+		return anim;
 	}
 
-	void GetTexts () {
-	
-		texts = new Dictionary <string, Text> (); 
+	Text AssociateText (string name) {
 
-		foreach (string name in textsNames) {
-			texts[name] = GameObject.FindGameObjectWithTag("Text" + name).GetComponent<Text> ();
-		}
+		Text text = GetGameObject(name).GetComponent<Text> ();
+		return text;
 	}
 
-	void GetAnimators () {
+	Button AssociatePushButton (string name, UnityAction action) {
 
-		animators = new Dictionary<string, Animator> ();
-	
-		foreach (string name in animatorNames) {
-			animators [name] = GameObject.FindGameObjectWithTag (name).GetComponent<Animator> ();
-		}
+		Button btn = GetGameObject(name).GetComponent<Button> ();
+		btn.onClick.AddListener (action);
+		return btn;
 	}
+
+	// ------------------------------------------------ //
+
+	GameObject GetGameObject (string name) {
+
+		GameObject go;
+		try {
+			go = GameObject.FindGameObjectWithTag (name);
+		} catch (NullReferenceException e) {
+			Debug.Log ("UIController: I could not find object with tag '" + name + "'");
+			throw e;
+		}
+
+		return go;
+	}
+
+	// ------------------------------------------ //
 
 	// --- Push buttons --- //
 
 	public void ButtonParticipation () {
-		buttons ["ButtonParticipation"].interactable = false;
+		
+		buttonParticipation.interactable = false;
 		gotUserParticipation = true;
-		animators ["ButtonParticipation"].SetBool ("Visible", false);
-		animators ["TextCentral"].SetBool ("Glow", true);
+		animButtonParticipation.SetBool (Bool.visible, false);
+		animTextCentral.SetBool (Bool.glow, true);
+
+		SubmittingParticipation ();
 	}
 
 	// --------------- Communication with gameController ---------- //
@@ -112,24 +118,24 @@ public class UIControllerLfp : MonoBehaviour {
 	}
 
 	public void NoRoomAvailable () {
-		texts ["Central"].text = "No game is running,\nor all players have already been recruited!"; 
-		animators ["ButtonParticipation"].SetBool ("Visible", false);
+		textCentral.text = "No game is running,\nor all players have already been recruited!"; 
+		animButtonParticipation.SetBool (Bool.visible, false);
 	}
 
 	public void Participation () {
 
-		buttons ["ButtonParticipation"].interactable = true;
+		buttonParticipation.interactable = true;
 
-		animators ["ButtonParticipation"].SetBool ("Visible", true);
-		animators ["ButtonParticipation"].SetBool ("Glow", true);
+		animButtonParticipation.SetBool (Bool.visible, true);
+		animButtonParticipation.SetBool (Bool.glow, true);
 
-		animators ["TextCentral"].SetBool ("Glow", false);
-		texts ["Central"].text = "There are games with available places. Do you want to join?"; 
+		animTextCentral.SetBool (Bool.glow, false);
+		textCentral.text = "There are games with available places. Do you want to join?"; 
 	}
 
 	public void SubmittingParticipation () {
-		animators ["TextCentral"].SetBool ("Glow", true);
-		texts ["Central"].text = "Booking the place...";
+		animTextCentral.SetBool (Bool.glow, true);
+		textCentral.text = "Booking the place...";
 	}
 
 	public void UpdateMissingPlayers (int missingPlayers) {
@@ -144,18 +150,20 @@ public class UIControllerLfp : MonoBehaviour {
 				"\nPlease wait...";
 		}
 
-		texts ["Central"].text = newText;
+		textCentral.text = newText;
 	}
 
 	public void WaitingForPlay () {
 		
-		texts ["Central"].text = "All players are ready.\nGame will start in a short moment...";
+		textCentral.text = "All players are ready.\nGame will start in a short moment...";
 	}
 
-	public void QuitScene () {
-		foreach (string name in animatorNames) {
-			animators [name].SetBool ("Visible", false);
-		}
+	public void QuitScene () {	
+
+		animLogo.SetBool (Bool.visible, false);
+		animButtonParticipation.SetBool (Bool.visible, false);
+		animTextCentral.SetBool (Bool.visible, false);
+
 		StartCoroutine (ActionWithDelay(EndAnimationQuitScene, 0.5f));
 
 	}
@@ -168,6 +176,11 @@ public class UIControllerLfp : MonoBehaviour {
 		yield return new WaitForSeconds(seconds);
 
 		methodName ();
+	}
+
+	public void ShowError () {
+		textCentral.text = "After a long delay without news from you,\n" +
+			"you have been banned in order to not block the other player";
 	}
 }
 

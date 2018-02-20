@@ -17,6 +17,7 @@ public class GameControllerLfp : MonoBehaviour {
 	TimeLineLfp state;
 
 	string sceneFirm = "Scenes/Firm";
+	string tagParameters = "Parameters";
 
 	string sceneToLoad;
 	bool occupied = false;
@@ -51,7 +52,7 @@ public class GameControllerLfp : MonoBehaviour {
 
 	void GetParameters () {
 
-		GameObject[] gos = GameObject.FindGameObjectsWithTag ("Parameters");
+		GameObject[] gos = GameObject.FindGameObjectsWithTag (tagParameters);
 		if (gos.Length == 0) {
 			gameObject.AddComponent<Parameters> ();
 			parameters = GetComponent<Parameters> ();
@@ -146,7 +147,6 @@ public class GameControllerLfp : MonoBehaviour {
 		case TimeLineLfp.GotUserParticipation:
 
 			client.SetState (TimeLineClientLfp.ProceedToRegistrationAsPlayerAsk);
-			uiController.SubmittingParticipation ();
 
 			state = TimeLineLfp.ProceedToRegistrationAsPlayerWaitReply;
 			LogState ();
@@ -182,7 +182,13 @@ public class GameControllerLfp : MonoBehaviour {
 
 			if (client.IsState (TimeLineClientLfp.MissingPlayersGotAnswer)) {
 
-				if (client.GetMissingPlayers () == 0) {
+				if (client.GetErrorRaised ()) {
+
+					uiController.ShowError ();
+					state = TimeLineLfp.Dead;
+					LogState ();
+
+				} else if (client.GetMissingPlayers () == 0) {
 
 					uiController.WaitingForPlay ();
 
@@ -223,8 +229,11 @@ public class GameControllerLfp : MonoBehaviour {
 			LogState ();
 			break;
 
+		case TimeLineLfp.Dead:
+			break;
+
 		default:
-			throw new System.Exception ("GameController: Bad state ('" + state + "').");
+			throw new System.Exception ("GC (LookForPlaying): Bad state ('" + state + "').");
 		}
 	}
 
@@ -247,8 +256,8 @@ public class GameControllerLfp : MonoBehaviour {
 
 	// ------------------------------ //
 
-	void LogState() {
-		Debug.Log ("GameController: My state is '" + state + "'.");
+	void LogState () {
+		Debug.Log ("GC (LookForPlaying): My state is '" + state + "'.");
 	}
 
 	// ------------------------------------------------ //
@@ -267,7 +276,7 @@ public class GameControllerLfp : MonoBehaviour {
 
 	// --------------- Relative to parameters ------------- //
 
-	public string GetUrl() {
+	public string GetUrl () {
 		return parameters.GetUrl ();
 	}
 

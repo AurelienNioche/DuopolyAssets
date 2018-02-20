@@ -13,9 +13,10 @@ public class GameControllerF : MonoBehaviour {
     UIControllerF uiController;
     FogControllerF fogController;
 
-	MenuF menu;
 	RoundF round;
 	TutorialF tutorial;
+
+	ClientF client;
 
 	// Timeline
 	TLGeneralF stateGeneral;
@@ -33,9 +34,9 @@ public class GameControllerF : MonoBehaviour {
         // Get components
         uiController = GetComponent<UIControllerF> ();
         fogController = GetComponent<FogControllerF> ();
-		menu = GetComponent<MenuF> ();
 		round = GetComponent<RoundF> ();
 		tutorial = GetComponent<TutorialF> ();
+		client = GetComponent<ClientF> ();
 
         GetParameters ();
     }
@@ -49,7 +50,7 @@ public class GameControllerF : MonoBehaviour {
 		currentStep = parameters.GetCurrentStep ();
 
 		// TimeLine 
-		stateGeneral = TLGeneralF.Menu; //TLGeneralF.Tuto;
+		stateGeneral = TLGeneralF.Init;
 
         fogController.NoFog ();
     }
@@ -62,10 +63,24 @@ public class GameControllerF : MonoBehaviour {
         
             switch (stateGeneral) {
 
-            case TLGeneralF.Menu:
+			case TLGeneralF.Init:
 
-				menu.ManageState ();
-                break;
+				if (currentStep == GameStep.tutorial) {
+
+					if (parameters.GetSkipTutorial ()) {
+						tutorial.SetState (TLTutoF.End);
+					}
+
+					PrepareTutorial ();
+
+				} else if (currentStep == GameStep.end) {
+					uiController.ShowMessageAlreadyPlayed ();
+
+				
+				} else {
+					PrepareNewRound ();
+				}
+				break;
 
             case TLGeneralF.Tuto:
                 
@@ -81,7 +96,7 @@ public class GameControllerF : MonoBehaviour {
             isOccupied = false;
         } 
     }
-
+		
     // ------------------------ Parameters -------------------------------- //
 
     void GetParameters () {
@@ -95,31 +110,22 @@ public class GameControllerF : MonoBehaviour {
         }
     }
 
-    // --------------------------------- //
-
-    IEnumerator ActionWithDelay(Action methodName, float seconds) {
-        yield return new WaitForSeconds(seconds);
-
-        methodName ();
-    }
-
     // ----------------- Called from uiController ---------------------- //
 
 	public void UserGotIt () {
 		tutorial.UserGotIt ();
+	}
+
+	public void UserChangePrice () {
+		tutorial.UserChangePrice ();
 	}
 		
     public void UserChangePosition () {
 		if (stateGeneral == TLGeneralF.Tuto) {
 			tutorial.UserChangePosition ();
 		} else {
-			uiController.AuthorizeValidation (true);
+			round.UserChangePosition ();
 		}
-    }
-
-    public void UserChangePrice () {
-
-		tutorial.UserChangePrice ();
     }
 
     public void UserValidate () {
@@ -141,18 +147,20 @@ public class GameControllerF : MonoBehaviour {
     }
 
     public void UserPushedButtonMenu () {
-    
-		if (stateGeneral == TLGeneralF.Menu) {
-			menu.UserPushedButtonMenu ();
-        }
-        
+
+		if (currentStep == GameStep.tutorial) {
+			stateGeneral = TLGeneralF.Tuto;
+		} else {
+			round.Begin ();
+			stateGeneral = TLGeneralF.Game;
+		}
     }
 
     // ----------------- Called from populationController ---------------------- //
 
     public void ConsumersAreArrived () {
 
-        Debug.Log ("GameController: Consumers are arrived.");
+        Debug.Log ("GC: Consumers are arrived.");
 
         if (stateGeneral == TLGeneralF.Tuto) {
 			tutorial.ConsumersAreArrived ();
@@ -164,7 +172,7 @@ public class GameControllerF : MonoBehaviour {
 
     public void OpponentIsArrived () {
 
-        Debug.Log ("GameController: Opponent is arrived.");
+        Debug.Log ("GC: Opponent is arrived.");
         if (stateGeneral == TLGeneralF.Tuto) {
 			tutorial.OpponentIsArrived ();
         
@@ -173,39 +181,27 @@ public class GameControllerF : MonoBehaviour {
         }
     }
 
-    // -------------  Begin game  ------------- //
+	// ---------- Called from round ------------- //
 
-    public void BeginTheGame () {
+	public void GotInitInfo () {
 
-        Debug.Log ("GameController: BeginTheGame.");
+		if (currentStep == GameStep.pve) {
+			uiController.ShowMessagePVE ();
 
-        stateGeneral = TLGeneralF.Game;
-
-		round.Begin ();
-    }
-
-    // -------------  Begin tutorial  ------------- //
-
-    public void BeginTheTutorial () {
-
-        Debug.Log ("GameController: BeginTheTutorial.");
-
-		if (parameters.GetSkipTutorial ()) {
-			tutorial.SetState (TLTutoF.End);
+		} else if (currentStep == GameStep.pvp) {
+			uiController.ShowMessagePVP ();
 		}
 
-        stateGeneral = TLGeneralF.Tuto;
-        
-    }
+		uiController.ShowButtonMenu ();
+	}
 
     public void EndTutorial () {
 
-        Debug.Log ("GameController: EndTutorial.");
+        Debug.Log ("GC: EndTutorial.");
 
 		currentStep = GameStep.pve;
 
-        stateGeneral = TLGeneralF.Menu;
-		menu.Begin ();
+		PrepareNewRound ();
     }
 
 	public void EndOfRound () {
@@ -217,28 +213,57 @@ public class GameControllerF : MonoBehaviour {
 		}
 	}
 
+	public void FatalError () {
+		Debug.Log ("GC: Fatal error");
+		if (client.GetError () == CodeErrorF.opponentDisconnected) {
+			uiController.ShowMessageOpponentDisconnected ();
+		} else {
+			uiController.ShowMessagePlayerDisconnected ();
+		}
+		stateGeneral = TLGeneralF.None;
+	}
+
+	// --------------- Transitions ------------------ //
+
+	void PrepareTutorial () {
+
+		Debug.Log("GC: Prepare tutorial");
+
+		uiController.ShowMenu ();
+		uiController.ShowMessageTutorial ();
+		uiController.ShowButtonMenu ();
+
+		stateGeneral = TLGeneralF.Waiting; // Waiting for the user (push button)
+	}
+
+	void PrepareNewRound() {
+
+		Debug.Log ("GC: Prepare new round");
+		
+		uiController.ShowMessageWaiting ();
+
+		round.Initialize ();
+		uiController.ShowMenu ();
+
+		stateGeneral = TLGeneralF.Game; // Waiting for the server (init info)
+	}
+
 	void EndOfGame () {
+
 		Debug.Log ("GC: End of game");
 		uiController.ShowMessageFinal ();
 		stateGeneral = TLGeneralF.None;
 	}
 
-	public void PlayerDisconnected () {
-		Debug.Log ("GC: Player disconnected");
-		uiController.ShowMessagePLayerDisconnected ();
-		stateGeneral = TLGeneralF.None;
-	}
-		
-	// ------------ Inter rounds ------------------------ //
-
 	void InterRound () {
+
 		Debug.Log ("GC: InterRound");
 		currentStep = GameStep.pvp;
-		stateGeneral = TLGeneralF.Menu;
-		menu.Begin ();
+
+		PrepareNewRound ();
 	}
         
-    // --------------- Relative to parameters ------------- //
+    // --------------- Getters relative to parameters ------------- //
 
     public string GetUrl () {
         return parameters.GetUrl ();
@@ -260,7 +285,8 @@ public class GameControllerF : MonoBehaviour {
 		return parameters.GetConsumersFieldOfView ();
 	}
 
-	// ----------------------------------- //
+	// ------------ Getters relative to other attributes -------------------- //
+
 	public string GetCurrentStep () {
 		return currentStep;
 	}    
