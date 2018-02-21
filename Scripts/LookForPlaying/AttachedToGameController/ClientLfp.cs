@@ -5,6 +5,12 @@ using UnityEngine;
 using AssemblyCSharp;
 using UnityEngine.Networking;
 
+class CodeErrorLfp {
+
+	public static int opponentDisconnected = -3;
+	public static int playerDisconnected = -4;
+}
+
 
 public class DemandLfp  {
 	public static string registeredAsPlayer = "registered_as_player";
@@ -40,6 +46,7 @@ public class ClientLfp : MonoBehaviour {
 	// -------------- For player ------------------------ //
 
 	bool errorRaised;
+	int error;
 
 	string userName;
 	string playerId;
@@ -205,6 +212,7 @@ public class ClientLfp : MonoBehaviour {
 
 			if (missingPlayers < 0) {
 				errorRaised = true;
+				error = missingPlayers;
 			}
 
 			state = TimeLineClientLfp.MissingPlayersGotAnswer;
@@ -325,6 +333,10 @@ public class ClientLfp : MonoBehaviour {
 
 	public bool GetErrorRaised () {
 		return errorRaised;
+	}
+
+	public int GetError () {
+		return error;
 	}
 
 	// ----------------------- Communication ----------------- //

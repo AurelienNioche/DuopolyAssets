@@ -73,10 +73,6 @@ public class GameControllerF : MonoBehaviour {
 
 					PrepareTutorial ();
 
-				} else if (currentStep == GameStep.end) {
-					uiController.ShowMessageAlreadyPlayed ();
-
-				
 				} else {
 					PrepareNewRound ();
 				}

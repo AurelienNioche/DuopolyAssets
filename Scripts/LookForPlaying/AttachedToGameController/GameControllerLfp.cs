@@ -81,8 +81,18 @@ public class GameControllerLfp : MonoBehaviour {
 			if (client.IsState (TimeLineClientLfp.RegisteredAsPlayerGotAnswer)) {
 
 				if (client.GetRegisteredAsPlayer ()) {
-					parameters.SetPlayerId (client.GetPlayerId ());
-					state = TimeLineLfp.MissingPlayersAsk;
+
+					if (client.GetCurrentStep() == GameStep.end) {
+
+						uiController.ShowMessageAlreadyPlayed ();
+						state = TimeLineLfp.Dead;
+					
+					} else {
+
+						parameters.SetPlayerId (client.GetPlayerId ());
+						state = TimeLineLfp.MissingPlayersAsk;
+					
+					}
 				} else {
 					state = TimeLineLfp.RoomAvailableAsk; 
 				}
@@ -184,7 +194,12 @@ public class GameControllerLfp : MonoBehaviour {
 
 				if (client.GetErrorRaised ()) {
 
-					uiController.ShowError ();
+					if (client.GetError () == CodeErrorLfp.playerDisconnected) {
+						uiController.ShowMessagePlayerDisconnected ();
+					} else {
+						uiController.ShowMessageOpponentDisconnected ();
+					}
+
 					state = TimeLineLfp.Dead;
 					LogState ();
 

@@ -368,7 +368,7 @@ public class RoundF : MonoBehaviour {
 
 			if (client.GetEndGame () == 1) {
 
-				uiController.SetProgress (100.0f);
+				uiController.SetProgress (1.0f);
 
 				// Update state
 				stateGame = TLRoundF.EndingGame;

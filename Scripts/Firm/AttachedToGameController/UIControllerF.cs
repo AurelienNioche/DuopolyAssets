@@ -561,15 +561,6 @@ public class UIControllerF : MonoBehaviour {
 		ac.textMenuCentral.SetBool (Bool.glow, true);
 	}
 
-	public void ShowMessageAlreadyPlayed () {
-
-		ac.textMenuCentral.SetBool (Bool.glow, false);
-		texts.menuCentral.text = "We know that this game is the best game you ever played, " +
-			"\nbut it is a single shot experiment!"; 
-		ac.textMenuCentral.SetBool (Bool.visible, true);
-		ac.textMenuCentral.SetBool (Bool.glow, true);
-	}
-
 	public void ShowMessageWaiting () {
 
 		ac.textMenuCentral.SetBool (Bool.glow, true);

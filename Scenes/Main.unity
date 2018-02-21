@@ -521,7 +521,7 @@ Prefab:
     - target: {fileID: 114496255088821026, guid: 02577158eb2e24a29a0a50682e9f461a,
         type: 2}
       propertyPath: skipTutorial
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114496255088821026, guid: 02577158eb2e24a29a0a50682e9f461a,
         type: 2}

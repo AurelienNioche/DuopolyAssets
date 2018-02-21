@@ -178,9 +178,30 @@ public class UIControllerLfp : MonoBehaviour {
 		methodName ();
 	}
 
-	public void ShowError () {
+	public void ShowMessageOpponentDisconnected () {
+
+		animTextCentral.SetBool (Bool.glow, false);
+		textCentral.text = 
+			"Unfortunately, the other player is disconnected\n" +
+			"There is no choice but to put an end to the game\n" +
+			"Your HIT will be accepted within three days";
+
+		animTextCentral.SetBool (Bool.visible, true);
+	}
+
+	public void ShowMessagePlayerDisconnected () {
+
+		animTextCentral.SetBool (Bool.glow, false);
 		textCentral.text = "After a long delay without news from you,\n" +
 			"you have been banned in order to not block the other player";
+		animTextCentral.SetBool (Bool.visible, true);
+	}
+
+	public void ShowMessageAlreadyPlayed () {
+
+		animTextCentral.SetBool (Bool.glow, true);
+		textCentral.text = "We know that this game is the best game you ever played, " +
+			"\nbut it is a single shot experiment!"; 
 	}
 }
 

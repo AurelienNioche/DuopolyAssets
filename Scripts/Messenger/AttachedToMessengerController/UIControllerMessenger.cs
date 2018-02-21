@@ -19,7 +19,7 @@ public class UIControllerMessenger : MonoBehaviour {
 
 	List<string> queueSendingDemand;
 
-	void Awake()  {
+	void Awake ()  {
 
 		sendingButton = GameObject.FindGameObjectWithTag ("MessengerSendingButton").GetComponent<Button> ();
 		inputField = GameObject.FindGameObjectWithTag ("MessengerInputField").GetComponent<InputField> ();
@@ -109,4 +109,8 @@ public class UIControllerMessenger : MonoBehaviour {
 		queueSendingDemand.Remove (sendingDemand);
 		return sendingDemand;
 	}	
+
+	public bool LockEnterKey () {
+		return allowEnter;
+	}
 }
