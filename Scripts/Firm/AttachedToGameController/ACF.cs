@@ -85,7 +85,6 @@ public class ACF : MonoBehaviour {
 
 		currentStep = Associate ("CurrentStep");
 
-
 		logo = Associate ("Logo");
 		buttonMenu = Associate ("ButtonMenu");
 
@@ -135,7 +134,7 @@ public class ACF : MonoBehaviour {
 			return anim;
 		}
 		catch (NullReferenceException){
-			throw new Exception ("UIController: I could not find object with tag '" + name + "'");
+			throw new Exception ("ACF: I could not find game object with tag '" + name + "'");
 		}
 	}
 }

@@ -27,6 +27,8 @@ public class GameControllerF : MonoBehaviour {
 
 	string currentStep;
 
+	string tagParameters = "Parameters";
+
     // -------------- Overloaded methods from MonoBehavior ---------------------------- //
 
     void Awake () {
@@ -97,7 +99,7 @@ public class GameControllerF : MonoBehaviour {
 
     void GetParameters () {
 
-        GameObject[] gos = GameObject.FindGameObjectsWithTag ("Parameters");
+        GameObject[] gos = GameObject.FindGameObjectsWithTag (tagParameters);
         if (gos.Length == 0) {
             gameObject.AddComponent<Parameters> ();
             parameters = GetComponent<Parameters> ();

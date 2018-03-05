@@ -127,7 +127,7 @@ public class UIControllerLi : MonoBehaviour {
 			try {
 				go = GameObject.FindGameObjectWithTag (entry.Key);
 			} catch (NullReferenceException e) {
-				Debug.Log ("UIController: I could not find object with tag '" + name + "'");
+				Debug.Log ("UIControllerLi: I could not find object with tag '" + name + "'");
 				throw e;
 			}
 
@@ -228,7 +228,7 @@ public class UIControllerLi : MonoBehaviour {
 
 		animators ["ButtonHome"].SetBool ("Visible", false);
 
-		Debug.Log ("UIController: Connected.");
+		Debug.Log ("UIControllerLi: Connected.");
 	}
 
 	public void ErrorOfConnection () {
@@ -244,7 +244,7 @@ public class UIControllerLi : MonoBehaviour {
 
 		texts ["Central"].text = "Name and password don't match...\nMaybe a typing error?";
 
-		Debug.Log ("UIController: Error of connection.");
+		Debug.Log ("UIControllerLi: Error of connection.");
 	}
 
 	public void IdentificationMenu () {

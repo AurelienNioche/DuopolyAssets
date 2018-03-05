@@ -315,23 +315,25 @@ public class UIControllerF : MonoBehaviour {
 
 	// ------------------ HUD -------------------------------- //
 
-	void UpdatePriceDisplaying () 
-	{
+	void UpdatePriceDisplaying () {
+		
 		texts.HUDPlayer.text = "$ " + selectedPrice.ToString ();
 		texts.price.text = selectedPrice.ToString ();
 	}
 
-	public void SetOpponentPrice (int newValue) 
-	{
+	public void SetOpponentPrice (int newValue) {
+		
 		texts.HUDOpponent.text = "$ " + newValue.ToString ();
 	}
 
-	public Vector3 GetTarget (string hudTag) 
-	{
+	public Vector3 GetTarget (string hudTag) {
+		
 		if (hudTag == tagHUDPlayer) {
 			return populationController.GetPlayerPosition ();
+		
 		} else if (hudTag == tagHUDOpponent) {
 			return populationController.GetOpponentPosition ();
+		
 		} else {
 			throw new System.Exception ("UIController: Error with HUD tag (tag given: '" + hudTag + ").");	
 		}
@@ -371,8 +373,8 @@ public class UIControllerF : MonoBehaviour {
 
 	// -------------- Turn Icons --------------------//
 
-	public void ChangeSelectedTurn (string newTurn)
-	{
+	public void ChangeSelectedTurn (string newTurn) {
+		
 		if (newTurn == Turn.player) {
 			SetSelectedTurn (true, false, false, false);
 		} else if (newTurn == Turn.consumers1) {
@@ -523,20 +525,23 @@ public class UIControllerF : MonoBehaviour {
 
 		ac.currentStep.SetBool (Bool.visible, true);
 
-		string text = "";
-
 		if (step == GameStep.tutorial) {
-			text += "Tutorial";
+			texts.currentStep.text = "Tutorial";
+			texts.currentStepComment.text = " ";
+		
 		} else if (step == GameStep.pve) {
-			text += "First round";
+			texts.currentStep.text = "First round";
+			texts.currentStepComment.text = "Human vs Computer";
+		
 		} else if (step == GameStep.pvp) {
-			text += "Final round";
+			texts.currentStep.text = "Final round";
+			texts.currentStepComment.text = "Human vs Human";
+		
 		} else {
 			throw new Exception ("UIControllerF: Step not understood");
 		}
 
-		texts.currentStep.text = text;
-		texts.progression.text = (0.00f).ToString ("0%");
+		texts.progression.text = (0.0f).ToString ("0%");
 	}
 
 	public void SetProgress (float progress) {
@@ -552,10 +557,10 @@ public class UIControllerF : MonoBehaviour {
 	public void ShowMessageFinal () {
 
 		ac.textMenuCentral.SetBool (Bool.glow, false);
-		texts.menuCentral.text = "You finished the final round! Well done!\n" +
+		texts.menuCentral.text = "You finished the final round!\n" +
 			"Score: " + gameController.GetScore().ToString() + "\n\n" + 
 			"Your HIT will be accepted within three days \n" +
-			"with a bonus corresponding to your scores on the two rounds.";
+			"with a bonus corresponding to your scores on the two rounds!";
 
 		ac.textMenuCentral.SetBool(Bool.visible, true);
 		ac.textMenuCentral.SetBool (Bool.glow, true);
@@ -564,7 +569,7 @@ public class UIControllerF : MonoBehaviour {
 	public void ShowMessageWaiting () {
 
 		ac.textMenuCentral.SetBool (Bool.glow, true);
-		texts.menuCentral.text = "Setting up...\n";
+		texts.menuCentral.text = "Loading...";
 		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
@@ -608,22 +613,21 @@ public class UIControllerF : MonoBehaviour {
 
 	public void ShowMessageOpponentDisconnected () {
 
-		ac.textMenuCentral.SetBool (Bool.glow, false);
+		ac.textMenuCentral.SetBool (Bool.glow, true);
 		texts.menuCentral.text = "Unfortunately, the other player is disconnected\n" +
 			"There is no choice but to put an end to the game\n\n" +
 			"Your HIT will be accepted within three days \n" +
-			"with a bonus corresponding to your score";
+			"with a bonus corresponding to your score!\n" +
+			"Thanks for your participation!";
 
-		ac.textMenuCentral.SetBool(Bool.visible, true);
+		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
 	public void ShowMessagePlayerDisconnected () {
 
-		ac.textMenuCentral.SetBool (Bool.glow, false);
+		ac.textMenuCentral.SetBool (Bool.glow, true);
 		texts.menuCentral.text = "After a long delay without news from you,\n" +
-			"you have been banned in order to not block the other player";
-		ac.textMenuCentral.SetBool(Bool.visible, true);
+			"there were no choice but to put an end to the game";
+		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
-
-
 }

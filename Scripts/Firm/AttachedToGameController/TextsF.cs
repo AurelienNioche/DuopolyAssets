@@ -31,6 +31,8 @@ public class TextsF : MonoBehaviour {
 	[HideInInspector]
 	public Text currentStep;
 	[HideInInspector]
+	public Text currentStepComment;
+	[HideInInspector]
 	public Text progression;
 
 	[HideInInspector]
@@ -57,6 +59,7 @@ public class TextsF : MonoBehaviour {
 		indicatorValidation = Associate("TextIndicatorValidation");
 
 		currentStep = Associate ("TextCurrentStep");
+		currentStepComment = Associate ("TextCurrentStepComment");
 		progression = Associate ("TextProgression");
 	}
 
@@ -66,7 +69,7 @@ public class TextsF : MonoBehaviour {
 			Text txt = gameObject.GetComponent<Text> ();
 			return txt;
 		} catch (NullReferenceException e) {
-			Debug.Log ("UIController: I could not find object with tag '" + name + "'");
+			Debug.Log ("TextsF: I could not find game object with tag '" + name + "'");
 			throw e;
 		}
 	}

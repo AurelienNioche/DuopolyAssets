@@ -151,6 +151,7 @@ public class UIControllerLfp : MonoBehaviour {
 		}
 
 		textCentral.text = newText;
+		animTextCentral.SetBool (Bool.glow, true);
 	}
 
 	public void WaitingForPlay () {
@@ -178,9 +179,17 @@ public class UIControllerLfp : MonoBehaviour {
 		methodName ();
 	}
 
+	public void ShowMessageLookingForARoomAvailable () {
+		animTextCentral.SetBool (Bool.glow, true);
+		textCentral.text = 
+			"Looking for a game with mssing players...";
+
+		animTextCentral.SetBool (Bool.visible, true);
+	}
+
 	public void ShowMessageOpponentDisconnected () {
 
-		animTextCentral.SetBool (Bool.glow, false);
+		animTextCentral.SetBool (Bool.glow, true);
 		textCentral.text = 
 			"Unfortunately, the other player is disconnected\n" +
 			"There is no choice but to put an end to the game\n" +
@@ -191,7 +200,7 @@ public class UIControllerLfp : MonoBehaviour {
 
 	public void ShowMessagePlayerDisconnected () {
 
-		animTextCentral.SetBool (Bool.glow, false);
+		animTextCentral.SetBool (Bool.glow, true);
 		textCentral.text = "After a long delay without news from you,\n" +
 			"you have been banned in order to not block the other player";
 		animTextCentral.SetBool (Bool.visible, true);
@@ -202,6 +211,16 @@ public class UIControllerLfp : MonoBehaviour {
 		animTextCentral.SetBool (Bool.glow, true);
 		textCentral.text = "We know that this game is the best game you ever played, " +
 			"\nbut it is a single shot experiment!"; 
+	}
+
+	public void ShowMessageNoOtherPlayer () {
+
+		animTextCentral.SetBool (Bool.glow, true);
+		textCentral.text = "Unfortunately, we did not succeed in finding you an opponent\n" +
+			"There is no choice but to cancel the game\n\n" +
+			"Your HIT will be nevertheless accepted within three days\n" +
+			"Thanks for your participation!";
+		animTextCentral.SetBool (Bool.visible, true);
 	}
 }
 

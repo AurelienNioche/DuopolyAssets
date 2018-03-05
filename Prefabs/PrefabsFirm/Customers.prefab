@@ -22829,9 +22829,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114017552115137284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22843,9 +22843,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114021289978138438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22857,9 +22857,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114023187795277622
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22871,9 +22871,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114029181180468564
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22915,9 +22915,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114086929431053670
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -22989,9 +22989,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114160276472271966
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23033,9 +23033,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114227185236798512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23047,9 +23047,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114232314250723834
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23061,9 +23061,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114253079127035548
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23105,9 +23105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114297679855848982
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23119,9 +23119,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114302542012147444
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23193,9 +23193,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114374645123794144
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23222,9 +23222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114426404970372518
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23251,9 +23251,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114464773577332912
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23310,9 +23310,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114543278287200934
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23369,9 +23369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114606486565665812
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23443,9 +23443,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114685337807373220
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23577,9 +23577,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114775420208588406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23636,9 +23636,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114841503697132204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23650,9 +23650,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!114 &114855371659710980
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -23724,9 +23724,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d410fb68729634a5a8d3087a226d4f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 10
+  rotationSpeed: 50
   toleranceForConsuming: 1
-  toleranceForSitting: 0.08
+  toleranceForSitting: 0.1
 --- !u!137 &137001026731887924
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
@@ -40872,11 +40872,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -40893,11 +40893,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -40914,11 +40914,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -40935,11 +40935,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -40956,11 +40956,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -40977,11 +40977,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -40998,11 +40998,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41019,11 +41019,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41040,11 +41040,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41061,11 +41061,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41082,11 +41082,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41103,11 +41103,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41124,11 +41124,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41145,11 +41145,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41166,11 +41166,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41187,11 +41187,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41208,11 +41208,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41229,11 +41229,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41250,11 +41250,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41271,11 +41271,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -41292,11 +41292,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
+  m_Speed: 4
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 100
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

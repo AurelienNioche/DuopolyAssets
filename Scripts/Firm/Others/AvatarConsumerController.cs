@@ -7,27 +7,26 @@ using UnityEngine.AI;
 
 public class AvatarConsumerController : MonoBehaviour 
 {
-	public float rotationSpeed = 10f;
+	public float rotationSpeed = 50f;
 	public float toleranceForConsuming = 1f;
-	public float toleranceForSitting = 0.04f;
+	public float toleranceForSitting = 0.1f;
+	public float timeFading = 0.5f;
 
 	Animator anim;
-	NavMeshAgent nav;
+	NavMeshAgent agent;
 
 	Vector3 goal;
-
 	Vector3 initialScale;
 
 	bool isConsuming = false;
-	bool isWalking = false;
-
 	bool hasAppeared = false;
+	bool isWalking = false;
 
 	void Awake () {
 
 		// Get components.
 		anim = GetComponent <Animator> ();
-		nav = GetComponent <UnityEngine.AI.NavMeshAgent> ();
+		agent = GetComponent <NavMeshAgent> ();
 
 		// Stock initial scale
 		initialScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
@@ -40,7 +39,7 @@ public class AvatarConsumerController : MonoBehaviour
 	void Update () {
 			
 		// If an avatar walks but is arrived, he should stop walking.
-		if (isWalking) {
+		if (IsWalking()) {
 
 			bool isArrived;
 			if (isConsuming){
@@ -79,57 +78,52 @@ public class AvatarConsumerController : MonoBehaviour
 
 	}
 		
-	bool IsArrived (float tolerance) {
-
-		// Check if the avatar reached his goal.
-		Vector3 position = transform.position;
-		bool cond1;
-		bool cond2;
-			
-		cond1 = position.x <= (goal.x + tolerance) && position.x >= (goal.x - tolerance);
-		cond2 = position.z <= (goal.z + tolerance) && position.z >= (goal.z - tolerance);
-
-		return cond1 && cond2;
+	bool IsArrived (float tolerance) {			
+		return agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < tolerance;
 	}
 		
 	void StopWalking () {
 
-		// Used  in order to make an avatar stop walking.
-		isWalking = false;
-		nav.isStopped = true;
+		agent.isStopped = true;
 
+		// Used  in order to make an avatar stop walking.
 		anim.SetBool ("Walk", false);
 
 		if (!isConsuming) {
 			anim.SetBool ("Sit", true);
-		} 
+		}
+		isWalking = false;
 	}
 
-	void Walk () {
+	IEnumerator Walk () {
 
+		while (!agent.isOnNavMesh) {
+			yield return new WaitForEndOfFrame ();
+		}
 		// Used in order to make an avatar walk.
-		nav.isStopped = false;
+		agent.isStopped = false;
+		anim.SetBool ("Sit", false);
 		anim.SetBool ("Walk", true);
-		nav.SetDestination (goal);
-		isWalking = true;
-	}
+		agent.SetDestination (goal);
+}
 
 	public void MoveToFirm (Vector3 position) {
 
 		// Set goal and make the avatar walk.
 		goal = position;
 		isConsuming = true;
-		anim.SetBool ("Sit", false);
-		Walk ();
+		isWalking = true;
+		StartCoroutine(Walk ());
 	}
 
 	public void ComeBack (Vector3 position) {
 		goal = position;
 		isConsuming = false;
-		Walk ();
+		isWalking = true;
+		StartCoroutine(Walk ());
 	}
 
-	public bool GetIsWalking () {
+	public bool IsWalking () {
 		return isWalking;
 	}
 
@@ -147,39 +141,45 @@ public class AvatarConsumerController : MonoBehaviour
 		}
 	}
 
+	public void StopAnimations () {
+		anim.SetBool ("Walk", false);
+		anim.SetBool ("Sit", false);
+		anim.ResetTrigger ("Jump");
+	} 
+
 	private IEnumerator FadeIn () {
 		
 		float elapsedTime = 0f;
-		float time = 0.5f;
 
 		anim.SetTrigger ("Jump");
 
-		while (elapsedTime < time) {
+		while (elapsedTime < timeFading) {
 
 			transform.localScale = new Vector3(
-				Mathf.Lerp (transform.localScale.x, initialScale.x, (elapsedTime / time)), 
-				Mathf.Lerp (transform.localScale.y, initialScale.y, (elapsedTime / time)), 
-				Mathf.Lerp (transform.localScale.z, initialScale.z, (elapsedTime / time)) 
+				Mathf.Lerp (transform.localScale.x, initialScale.x, (elapsedTime / timeFading)), 
+				Mathf.Lerp (transform.localScale.y, initialScale.y, (elapsedTime / timeFading)), 
+				Mathf.Lerp (transform.localScale.z, initialScale.z, (elapsedTime / timeFading)) 
 			);
 
 			elapsedTime += Time.deltaTime;
 			yield return new WaitForEndOfFrame();
 		}
-		anim.SetBool ("Sit", true);
+
+		if (!isConsuming) {
+			anim.SetBool ("Sit", true);
+		}
 	}
 
 	private IEnumerator FadeOut () {
 
 		float elapsedTime = 0f;
-		float time = 0.5f;
 
-		while (elapsedTime < time)
-		{
+		while (elapsedTime < timeFading) {
 
 			transform.localScale = new Vector3(
-				Mathf.Lerp (transform.localScale.x, 0, (elapsedTime / time)), 
-				Mathf.Lerp (transform.localScale.y, 0, (elapsedTime / time)), 
-				Mathf.Lerp (transform.localScale.z, 0, (elapsedTime / time)) 
+				Mathf.Lerp (transform.localScale.x, 0, (elapsedTime / timeFading)), 
+				Mathf.Lerp (transform.localScale.y, 0, (elapsedTime / timeFading)), 
+				Mathf.Lerp (transform.localScale.z, 0, (elapsedTime / timeFading)) 
 			);
 
 			elapsedTime += Time.deltaTime;

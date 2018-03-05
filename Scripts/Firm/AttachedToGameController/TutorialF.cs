@@ -511,9 +511,7 @@ public class TutorialF : MonoBehaviour {
 
 			uiController.HideObjects ();
 
-			populationController.MakePlayerDisappear ();
-			populationController.MakeOpponentDisappear ();
-			populationController.MakeAllConsumersDisappear ();
+			populationController.EndRound ();
 
 			TutoNextStep ();
 			break;

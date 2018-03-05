@@ -227,7 +227,7 @@ public class RoundF : MonoBehaviour {
 
 			if (client.GetEndGame () == 1) {
 
-				uiController.SetProgress (100.0f);
+				uiController.SetProgress (1.0f);
 
 				stateGame = TLRoundF.EndingGame;
 
@@ -389,9 +389,7 @@ public class RoundF : MonoBehaviour {
 
 			uiController.HideObjects ();
 
-			populationController.MakePlayerDisappear ();
-			populationController.MakeOpponentDisappear ();
-			populationController.MakeAllConsumersDisappear ();
+			////
 
 			stateGame = TLRoundF.EndOfGame;
 
@@ -430,13 +428,6 @@ public class RoundF : MonoBehaviour {
 		return floatT / floatEndingT;
 	}
 
-	// ---------------- For facilitating coroutines ----------------------------------//
-
-	IEnumerator ActionWithDelay(Action methodName, float seconds) {
-		yield return new WaitForSeconds(seconds);
-		methodName ();
-	}
-
 	// ---------------- Called from gameController ----------------------------- //
 
 	public void Begin () {
@@ -454,21 +445,34 @@ public class RoundF : MonoBehaviour {
 	// ----------------- Called from populationController ---------------------- //
 
 	public void ConsumersAreArrived () {
-		RoundNextStep ();
+		if (stateGame == TLRoundF.ActiveMovingConsumers || stateGame == TLRoundF.PassiveMovingConsumers ||
+		    stateGame == TLRoundF.PassiveMovingBackConsumers || stateGame == TLRoundF.ActiveMovingBackConsumers) {
+
+			RoundNextStep ();
+		} else {
+			throw new Exception ("ta mere");	
+		}
 	}
 
 	public void OpponentIsArrived () {
-		RoundNextStep ();
+		if (stateGame == TLRoundF.PassiveMovingOpponent) {
+			RoundNextStep ();
+		}
 	}
 
 	//  -------------- Called from UI (through gameController -------------- //
 
 	public void UserCollect () {
-		RoundNextStep ();
+		if (stateGame == TLRoundF.ActiveNextTurnWaitingUser || stateGame == TLRoundF.PassiveNextTurnWaitingUser) {
+			
+			RoundNextStep ();
+		}
 	}
 
 	public void UserValidate () {
-		RoundNextStep ();
+		if (stateGame == TLRoundF.ActiveChoiceWaitingUser) {
+			RoundNextStep ();
+		}
 	}
 
 	public void UserChangePosition () {

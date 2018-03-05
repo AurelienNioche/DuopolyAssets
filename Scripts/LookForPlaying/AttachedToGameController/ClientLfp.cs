@@ -9,6 +9,7 @@ class CodeErrorLfp {
 
 	public static int opponentDisconnected = -3;
 	public static int playerDisconnected = -4;
+	public static int noOtherPlayer = -5;
 }
 
 
@@ -235,7 +236,10 @@ public class ClientLfp : MonoBehaviour {
 				playerId = args [1];
 				Debug.Log ("ClientLfp: my playerId is " + playerId + ".");
 
-				gameController.SetConsumersFieldOfView(GameTools.TranslateFromFieldOfView(args [2]));
+				currentStep = args [2];
+				Debug.Log ("ClientLfp: current current step is " + currentStep + ".");
+
+				gameController.SetConsumersFieldOfView(GameTools.TranslateFromFieldOfView(args [3]));
 			}
 
 			state = TimeLineClientLfp.ProceedToRegistrationAsPlayerGotAnswer;

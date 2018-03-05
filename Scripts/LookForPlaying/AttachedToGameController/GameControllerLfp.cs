@@ -69,6 +69,8 @@ public class GameControllerLfp : MonoBehaviour {
 
 		case TimeLineLfp.RegisteredAsPlayerAsk:
 
+			uiController.ShowMessageLookingForARoomAvailable ();
+
 			client.SetUserName (parameters.GetUserName());
 			client.SetState (TimeLineClientLfp.RegisteredAsPlayerAsk);
 
@@ -196,8 +198,10 @@ public class GameControllerLfp : MonoBehaviour {
 
 					if (client.GetError () == CodeErrorLfp.playerDisconnected) {
 						uiController.ShowMessagePlayerDisconnected ();
-					} else {
+					} else if (client.GetError () == CodeErrorLfp.opponentDisconnected) {
 						uiController.ShowMessageOpponentDisconnected ();
+					} else {
+						uiController.ShowMessageNoOtherPlayer ();
 					}
 
 					state = TimeLineLfp.Dead;

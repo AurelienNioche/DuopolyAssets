@@ -32,10 +32,9 @@ public class IndicatorButtonControllerF : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (animator.GetBool("Visible") && btn.interactable && (Input.GetKeyUp (KeyCode.Return) || Input.GetKeyUp(KeyCode.KeypadEnter))) {
-			btn.onClick.Invoke ();
-		}
-		
+//		if (animator.GetBool("Visible") && btn.interactable && (Input.GetKeyUp (KeyCode.Return) || Input.GetKeyUp(KeyCode.KeypadEnter))) {
+//			btn.onClick.Invoke ();
+//		}		
 	}
 
 	void TaskOnClick () {

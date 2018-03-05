@@ -5,6 +5,13 @@ using UnityEngine.AI;
 using AssemblyCSharp;
 using cakeslice; // For outriles
 
+class TagAvatars {
+	public static string  player = "AvatarPlayer";
+	public static string opponent = "AvatarOpponent"; 
+	public static string consumer = "AvatarConsumer";
+	public static string consumerOutline = "SP2_Character_SurferDude";
+}
+
 
 public class PopulationControllerF : MonoBehaviour
 {
@@ -56,7 +63,6 @@ public class PopulationControllerF : MonoBehaviour
         GetLocationPositions();
         GetAgentsControl();
         GetAgentsOutline();
-
     }
 
 
@@ -102,12 +108,12 @@ public class PopulationControllerF : MonoBehaviour
     void GetAgentsControl () {
 
         for (int i = 0; i < GameFeatures.nPositions; i++) {
-            GameObject ca = GameObject.FindGameObjectWithTag(string.Concat("AvatarConsumer", i));
+			GameObject ca = GameObject.FindGameObjectWithTag(string.Concat(TagAvatars.consumer, i));
             consumerAvatar.Add(ca);
         }
 
-        playerAvatar = GameObject.FindGameObjectWithTag("AvatarPlayer");
-        opponentAvatar = GameObject.FindGameObjectWithTag("AvatarOpponent");
+		playerAvatar = GameObject.FindGameObjectWithTag(TagAvatars.player);
+		opponentAvatar = GameObject.FindGameObjectWithTag(TagAvatars.opponent);
 
         // Get access to controllers (scripts)
 
@@ -122,10 +128,10 @@ public class PopulationControllerF : MonoBehaviour
 	void GetAgentsOutline() {
 		
         for (int i = 0; i < GameFeatures.nPositions; i++) {
-            Outline outline = consumerController[i].transform.Find("SP2_Character_SurferDude").GetComponent<Outline>();
+			
+			Outline outline = consumerController[i].transform.Find(TagAvatars.consumerOutline).GetComponent<Outline>();
             consumerOutlines.Add(outline);
             consumerOutlines[i].enabled = false;
-
         }
 
     }
@@ -135,31 +141,38 @@ public class PopulationControllerF : MonoBehaviour
         this.playerPosition = playerPosition;
         this.opponentPosition = opponentPosition;
 
-        MovePlayerStraightforward(playerPosition);
-        MoveOpponentStraightforward(opponentPosition);
+		playerController.transform.position = firmLocations[playerPosition];
+
+		if (playerPosition == opponentPosition) {
+			if (debug) {
+				Debug.Log("PopulationControllerF: Same position for player and opponent!");
+			}
+			playerController.transform.position += offsetIfSameLocation;
+		}        
+			
+		opponentController.transform.position = firmLocations[opponentPosition];
 
         for (int i = 0; i < GameFeatures.nPositions; i++) {
             consumerAvatar[i].transform.position = consumerNapLocations[i];
         }
 		HideConsumersOutline ();
-
     }
 
     // --------------------- Are player or consumers moving -------------------------- //
 
     public bool PlayerIsMoving () {
-        return playerController.GetIsWalking();
+        return playerController.IsWalking();
     }
 
     public bool OpponentIsMoving () {
-        return opponentController.GetIsWalking();
+        return opponentController.IsWalking();
     }
 
     public bool ConsumersAreMoving()
     {
         bool consumerMoving = false;
         for (int i = 0; i < GameFeatures.nPositions; i++) {
-            if (consumerController[i].GetIsWalking()) {
+            if (consumerController[i].IsWalking()) {
                 consumerMoving = true;
                 break;
             }
@@ -174,8 +187,6 @@ public class PopulationControllerF : MonoBehaviour
         if (debug) {
             Debug.Log("PopulationControllerF: move player to position " + playerPosition + ".");
         }
-        playerController.SetActive(true);
-        opponentController.SetActive(false);
 
         if (this.playerPosition != playerPosition) {
 
@@ -198,68 +209,31 @@ public class PopulationControllerF : MonoBehaviour
     public void MoveOpponent(int opponentPosition) {
 
         if (debug) {
-            Debug.Log("PopulationControllerF: move opponent to position " + opponentPosition + ".");
+            Debug.Log("PopulationControllerF: Move opponent to position " + opponentPosition + ".");
         }
-        playerController.SetActive(false);
-        opponentController.SetActive(true);
 
         if (this.opponentPosition != opponentPosition) {
             this.opponentPosition = opponentPosition;
             Vector3 newPosition = firmLocations[opponentPosition];
-            if (playerPosition == opponentPosition && !playerShifted)
-            {
+            if (playerPosition == opponentPosition && !playerShifted) {
                 newPosition += offsetIfSameLocation;
                 opponentShifted = true;
-            }
-            else
-            {
+            } else {
                 opponentShifted = false;
             }
             opponentController.SetGoal(newPosition);
         }
     }
 		
-    public IEnumerator MoveOpponentAndSendSignal(int opponentPosition) {
+    public IEnumerator MoveOpponentAndSendSignal (int opponentPosition) {
 
         MoveOpponent(opponentPosition);
 
-        while (opponentController.GetIsWalking()) {
+        while (opponentController.IsWalking ()) {
             yield return new WaitForEndOfFrame();
         }
 
-        gameController.OpponentIsArrived();
-    }
-
-	public void MovePlayerStraightforward(int playerPosition) {
-
-        opponentController.SetActive(false);
-
-		if (debug) {
-            Debug.Log("PopulationControllerF: move player to position " + playerPosition + ".");
-        }
-        this.playerPosition = playerPosition;
-        Vector3 newPosition = firmLocations[playerPosition];
-        playerController.transform.position = newPosition;
-
-        if (playerPosition == opponentPosition) {
-            if (debug) {
-                Debug.Log("PopulationControllerF: Same position for player and opponent!");
-            }
-            playerController.transform.position += offsetIfSameLocation;
-        }        
-    }
-
-    public void MoveOpponentStraightforward (int opponentPosition) {
-
-        playerController.SetActive(false);
-
-        if (debug) {
-            Debug.Log("PopulationControllerF: move opponent to position " + opponentPosition + ".");
-        }
-
-        this.opponentPosition = opponentPosition;
-        Vector3 newPosition = firmLocations[opponentPosition];
-        opponentController.transform.position = newPosition;
+        gameController.OpponentIsArrived ();
     }
 
     public IEnumerator MoveConsumers(int[] consumerChoices) {
@@ -320,7 +294,6 @@ public class PopulationControllerF : MonoBehaviour
         }
 
         gameController.ConsumersAreArrived ();
-        //MakeConsumerRadiusAppear ();
     }
 
     public IEnumerator MoveExampleConsumer(int consumerPosition, int consumerChoice) {
@@ -347,13 +320,13 @@ public class PopulationControllerF : MonoBehaviour
 
         consumerController[i].MoveToFirm(consumerLocations[goalPosition]);
 
-        while (consumerController[i].GetIsWalking()) {
+        while (consumerController[i].IsWalking()) {
             yield return new WaitForEndOfFrame();
         }
 
         consumerController[i].ComeBack(consumerNapLocations[i]);
 
-		while (consumerController[i].GetIsWalking()) {
+		while (consumerController[i].IsWalking()) {
             yield return new WaitForEndOfFrame();
         }
 
@@ -447,11 +420,26 @@ public class PopulationControllerF : MonoBehaviour
 	// ----------- Preparation ---------------------- //
 
 	public void PrepareNewRound (int playerPosition, int opponentPosition) {
+
 		PlaceAgentsToInitialPosition (playerPosition, opponentPosition);
 
 		MakePlayerAppear ();
 		MakeOpponentAppear ();
 		MakeAllConsumerAppear ();
+	}
+
+	public void EndRound () {
+
+		opponentController.StopAnimations ();
+		playerController.StopAnimations ();
+
+		for (int i = 0; i < GameFeatures.nPositions; i++) {    
+			consumerController [i].StopAnimations ();
+		}
+
+		MakePlayerDisappear ();
+		MakeOpponentDisappear ();
+		MakeAllConsumersDisappear ();
 	}
 }
 

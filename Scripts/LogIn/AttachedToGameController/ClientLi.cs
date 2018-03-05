@@ -5,6 +5,18 @@ using UnityEngine;
 using AssemblyCSharp;
 using UnityEngine.Networking;
 
+
+class DemandLi {
+	public static string connect = "connect";
+}
+
+
+class KeyLi {
+	public static string demand = "demand";
+	public static string username = "username";
+	public static string password = "password";
+}
+
 public class ClientLi : MonoBehaviour {
 
 	GameControllerLi gameController;
@@ -67,9 +79,9 @@ public class ClientLi : MonoBehaviour {
 		case TimeLineClientLi.AskConnection:
 
 			request.Clear ();
-			request ["demand"] = "connect";
-			request ["username"] = userName;
-			request ["password"] = password;
+			request [KeyLi.demand] = DemandLi.connect;
+			request [KeyLi.username] = userName;
+			request [KeyLi.password] = password;
 
 			StartCoroutine (AskServer (request));
 
@@ -147,13 +159,9 @@ public class ClientLi : MonoBehaviour {
 
 	void MakeTheCorrectCall (string what, string [] strArgs) {
 
-		switch (what) {
-
-		case "connect":
+		if (what == DemandLi.connect) {
 			ReplyConnected (strArgs);
-			break;
-
-		default:
+		} else {
 			throw new System.Exception ("I received '" + what + "' with args '" + strArgs + "' but I can not catch that.");
 		}
 	}

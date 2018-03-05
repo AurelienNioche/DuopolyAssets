@@ -21,6 +21,8 @@ public class GameControllerLi : MonoBehaviour {
 
 
 	string sceneLookForPlaying = "Scenes/LookForPlaying";
+	string sceneMain = "Scenes/Main";
+
 	string sceneToLoad;
 
 	bool occupied = false;
@@ -134,7 +136,7 @@ public class GameControllerLi : MonoBehaviour {
 		
 		case TimeLineLi.ComeBackHome:
 
-			sceneToLoad = "SceneMain";
+			sceneToLoad = sceneMain;
 			uiController.QuitScene ();
 			state = TimeLineLi.WaitEndAnimationQuitScene;
 

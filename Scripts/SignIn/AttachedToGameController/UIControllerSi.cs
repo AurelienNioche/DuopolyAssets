@@ -77,6 +77,7 @@ public class UIControllerSi : MonoBehaviour {
 		animButtonLogIn = AssociateAnim ("ButtonLogIn");
 		animButtonSendAgain = AssociateAnim ("ButtonSendAgain");
 		animButtonHome = AssociateAnim ("ButtonHome");
+		animTextInformation = AssociateAnim ("TextInformation");
 
 		textInformation = AssociateText ("TextInformation");
 

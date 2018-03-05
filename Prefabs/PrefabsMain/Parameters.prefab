@@ -51,15 +51,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5df6bfad9ca24df394ed31a4fa35c0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  url: http://duopoly.pythonanywhere.com/client_request/
-  timeBeforeRetryingDemand: 1
-  urlMessenger: http://duopoly.pythonanywhere.com/messenger/
-  timeBeforeRetryingDemandMessenger: 1
-  adminName: dasein
-  adminPassword: macaque40
+  url: 127.0.0.1:8000
+  delayNewDemand: 1
+  delayNewDemandMessenger: 1
   serverName: Admin
-  userName: azer=:;,
-  password: azer=:;,
-  roomId: 0
-  playerId: 0
-  alreadyDidTheTutorial: 1
+  skipTutorial: 0
