@@ -100,6 +100,9 @@ public class AvatarConsumerController : MonoBehaviour
 		while (!agent.isOnNavMesh) {
 			yield return new WaitForEndOfFrame ();
 		}
+
+		// Used in order to make an avatar walk
+		anim.SetBool ("Walk", true);
 		// Used in order to make an avatar walk.
 		agent.isStopped = false;
 		anim.SetBool ("Sit", false);
@@ -117,10 +120,13 @@ public class AvatarConsumerController : MonoBehaviour
 	}
 
 	public void ComeBack (Vector3 position) {
-		goal = position;
-		isConsuming = false;
-		isWalking = true;
-		StartCoroutine(Walk ());
+
+		if (isConsuming) {
+			goal = position;
+			isConsuming = false;
+			isWalking = true;
+			StartCoroutine(Walk ());
+		}
 	}
 
 	public bool IsWalking () {

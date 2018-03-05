@@ -493,6 +493,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114496255088821026, guid: 02577158eb2e24a29a0a50682e9f461a,
+        type: 2}
+      propertyPath: url
+      value: http://51.15.6.148/
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 02577158eb2e24a29a0a50682e9f461a, type: 2}
   m_IsPrefabParent: 0

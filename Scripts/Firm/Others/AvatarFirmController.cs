@@ -67,8 +67,6 @@ public class AvatarFirmController : MonoBehaviour
 		
 	void StopWalking () {
 
-		Debug.Log ("I'm arrived and stop walking");
-
 		// Used  in order to make an avatar stop walking
 		agent.enabled = false;
 		obstacle.enabled = true;
@@ -78,17 +76,14 @@ public class AvatarFirmController : MonoBehaviour
 
 	IEnumerator Walk () {
 
-		Debug.Log ("Walk is called");
+		obstacle.enabled = false;
+		agent.enabled = true;
 
 		while (!agent.isOnNavMesh) {
 			yield return new WaitForEndOfFrame ();
 		}
 
-		Debug.Log ("Do stuff");
-
 		// Used in order to make an avatar walk
-		obstacle.enabled = false;
-		agent.enabled = true;
 		anim.SetBool ("Walk", true);
 		agent.SetDestination (goal);
 	}
