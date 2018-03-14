@@ -23,8 +23,6 @@ public class TutorialF : MonoBehaviour {
 
 	// --------------------------------- //
 
-	public float delayForCommunicatingProgress = 0.2f;
-
 	public int initialPlayerPosition = 15;
 	public int initialPlayerPrice = 6;
 
@@ -32,6 +30,8 @@ public class TutorialF : MonoBehaviour {
 	public int initialOpponentPrice = 11;
 
 	public int exampleConsumerPosition = 2;
+
+	float delayForCommunicatingProgress;
 
 	bool submitProgression;
 
@@ -69,6 +69,9 @@ public class TutorialF : MonoBehaviour {
 			Debug.Log("Generate fake 'consumerFieldOfView'");
 			consumersFieldOfView = GameTools.GenerateConsumersFieldOfView ();
 		}
+
+		delayForCommunicatingProgress = gameController.GetTimeBeforeRetryingDemand ();
+
 		stateTuto = TLTutoF.Init;
 		
 	}
@@ -513,36 +516,14 @@ public class TutorialF : MonoBehaviour {
 
 			populationController.EndRound ();
 
-			TutoNextStep ();
-			break;
-
-		case TLTutoF.RegisterTutorialDone:
-
 			submitProgression = false;
 
-			if (client.IsState (TLClientF.GotSubmitTutorialProgression) || client.IsState (TLClientF.WaitCommand)) {
-
-				client.AskTutorialDone ();
-				TutoNextStep ();
-
-			}
-			break;
-
-		case TLTutoF.RegisterTutorialDoneWaitReply:
-
-			if (client.IsState(TLClientF.GotTutorialDone)) {
-				TutoNextStep ();
-			}
-			break;
-
-		case TLTutoF.RegisterTutorialDoneGotReply:
+			gameController.EndTutorial ();
 
 			TutoNextStep ();
-
-			gameController.EndTutorial ();
 			break;
 
-		case TLTutoF.Complete:
+		case TLTutoF.Dead:
 			break;
 		}
 	}

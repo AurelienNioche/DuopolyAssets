@@ -228,6 +228,8 @@ public class GameControllerLfp : MonoBehaviour {
 			
 			parameters.SetPlayerId (client.GetPlayerId ());
 			parameters.SetCurrentStep (client.GetCurrentStep ());
+			parameters.SetDisplayOpponentScore (client.GetDisplayOpponentScore ());
+			parameters.SetConsumersFieldOfView (client.GetConsumersFieldOfView ());
 
 			// Load next scene
 			sceneToLoad = sceneFirm;
@@ -301,9 +303,5 @@ public class GameControllerLfp : MonoBehaviour {
 
 	public float GetTimeBeforeRetryingDemand () {
 		return parameters.GetTimeBeforeRetryingDemand ();
-	}
-
-	public void SetConsumersFieldOfView (int[,] value) {
-		parameters.SetConsumersFieldOfView (value);
 	}
 }

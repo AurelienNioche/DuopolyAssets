@@ -56,6 +56,8 @@ public class ClientLfp : MonoBehaviour {
 	string currentStep;
 	bool registeredAsPlayer;
 	bool roomAvailable;
+	bool displayOpponentScore;
+	int[,] consumersFieldOfView;
 
 	TimeLineClientLfp state;
 
@@ -181,7 +183,11 @@ public class ClientLfp : MonoBehaviour {
 				currentStep = args [2];
 				Debug.Log ("ClientLfp: current current step is " + currentStep + ".");
 
-				gameController.SetConsumersFieldOfView(GameTools.TranslateFromFieldOfView(args [3]));
+				if (currentStep != GameStep.end) {
+
+					consumersFieldOfView = GameTools.TranslateFromFieldOfView (args [3]);
+					displayOpponentScore = int.Parse (args [4]) == 1;
+				}
 			}
 
 			state = TimeLineClientLfp.RegisteredAsPlayerGotAnswer;
@@ -239,7 +245,9 @@ public class ClientLfp : MonoBehaviour {
 				currentStep = args [2];
 				Debug.Log ("ClientLfp: current current step is " + currentStep + ".");
 
-				gameController.SetConsumersFieldOfView(GameTools.TranslateFromFieldOfView(args [3]));
+				consumersFieldOfView = GameTools.TranslateFromFieldOfView(args [3]);
+
+				displayOpponentScore = int.Parse (args [4]) == 1;
 			}
 
 			state = TimeLineClientLfp.ProceedToRegistrationAsPlayerGotAnswer;
@@ -341,6 +349,14 @@ public class ClientLfp : MonoBehaviour {
 
 	public int GetError () {
 		return error;
+	}
+
+	public bool GetDisplayOpponentScore () {
+		return displayOpponentScore;
+	}
+
+	public int[, ] GetConsumersFieldOfView () {
+		return consumersFieldOfView;
 	}
 
 	// ----------------------- Communication ----------------- //

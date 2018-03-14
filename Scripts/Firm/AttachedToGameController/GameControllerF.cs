@@ -214,8 +214,10 @@ public class GameControllerF : MonoBehaviour {
 	public void FatalError () {
 		Debug.Log ("GC: Fatal error");
 		if (client.GetError () == CodeErrorF.opponentDisconnected) {
+			uiController.ShowMenu ();
 			uiController.ShowMessageOpponentDisconnected ();
 		} else {
+			uiController.ShowMenu ();
 			uiController.ShowMessagePlayerDisconnected ();
 		}
 		stateGeneral = TLGeneralF.None;
@@ -237,11 +239,12 @@ public class GameControllerF : MonoBehaviour {
 	void PrepareNewRound() {
 
 		Debug.Log ("GC: Prepare new round");
-		
+
+		uiController.ShowMenu ();
 		uiController.ShowMessageWaiting ();
 
 		round.Initialize ();
-		uiController.ShowMenu ();
+
 
 		stateGeneral = TLGeneralF.Game; // Waiting for the server (init info)
 	}
@@ -249,6 +252,7 @@ public class GameControllerF : MonoBehaviour {
 	void EndOfGame () {
 
 		Debug.Log ("GC: End of game");
+		uiController.ShowMenu ();
 		uiController.ShowMessageFinal ();
 		stateGeneral = TLGeneralF.None;
 	}
@@ -281,6 +285,10 @@ public class GameControllerF : MonoBehaviour {
 
 	public int[,] GetConsumersFieldOfView () {
 		return parameters.GetConsumersFieldOfView ();
+	}
+
+	public bool GetDisplayOpponentScore () {
+		return parameters.GetDisplayOpponentScore ();
 	}
 
 	// ------------ Getters relative to other attributes -------------------- //

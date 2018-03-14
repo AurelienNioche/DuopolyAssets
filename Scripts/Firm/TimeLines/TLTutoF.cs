@@ -72,9 +72,6 @@ namespace AssemblyCSharp
 		Money,
 		MoneyWaitUser,
 		End,
-		RegisterTutorialDone,
-		RegisterTutorialDoneWaitReply,
-		RegisterTutorialDoneGotReply,
-		Complete
+		Dead
 	}
 }

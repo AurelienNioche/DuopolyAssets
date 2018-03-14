@@ -122,22 +122,6 @@ public class ClientF : MonoBehaviour {
 		case TLClientF.WaitCommand:
 			break;
 
-		case TLClientF.TutorialDone:
-
-			request.Clear ();
-			request [KeyF.demand] = DemandF.tutorialDone;
-			request [KeyF.playerId] = playerId;
-
-			foreach (KeyValuePair<string, string> entry in request) {
-				Debug.Log (entry.Key + " " + entry.Value);
-			}
-
-			StartCoroutine (AskServer (request));
-
-			state = TLClientF.TutorialDoneWaitReply;
-			LogState ();
-			break;
-
 		case TLClientF.Init:
 
 			request.Clear ();
@@ -163,19 +147,6 @@ public class ClientF : MonoBehaviour {
 			LogState ();
 			break;
 
-		case TLClientF.PassiveConsumerChoices:
-
-			request.Clear ();
-			request [KeyF.playerId] = playerId;
-			request [KeyF.t] = t.ToString ();
-			request [KeyF.demand] = DemandF.askFirmPassiveConsumerChoices;
-
-			StartCoroutine (AskServer (request));
-
-			state = TLClientF.PassiveConsumerChoicesWaitReply;
-			LogState ();
-			break;
-
 		case TLClientF.ActiveChoiceRecording:
 
 			request.Clear ();
@@ -188,19 +159,6 @@ public class ClientF : MonoBehaviour {
 			StartCoroutine (AskServer (request));
 
 			state = TLClientF.ActiveChoiceRecordingWaitReply;
-			LogState ();
-			break;
-
-		case TLClientF.ActiveConsumerChoices:
-
-			request.Clear ();
-			request [KeyF.playerId] = playerId;
-			request [KeyF.t] = t.ToString ();
-			request [KeyF.demand] = DemandF.askFirmActiveConsumerChoices;
-
-			StartCoroutine (AskServer (request));
-
-			state = TLClientF.ActiveConsumerChoicesWaitReply;
 			LogState ();
 			break;
 		
@@ -216,22 +174,15 @@ public class ClientF : MonoBehaviour {
 			LogState ();
 			break;
 
-
-		case TLClientF.GotTutorialDone:
 		case TLClientF.GotInit:
 		case TLClientF.GotActiveChoiceRecording:
-		case TLClientF.GotActiveConsumerChoices:
-		case TLClientF.GotPassiveConsumerChoices:
 		case TLClientF.GotPassiveOpponentChoice:
 		case TLClientF.GotSubmitTutorialProgression:
 			break;
 
-		case TLClientF.TutorialDoneWaitReply:
 		case TLClientF.InitWaitReply:
 		case TLClientF.PassiveOpponentChoiceWaitReply:
-		case TLClientF.PassiveConsumerChoicesWaitReply:
 		case TLClientF.ActiveChoiceRecordingWaitReply:
-		case TLClientF.ActiveConsumerChoicesWaitReply:
 		case TLClientF.SubmitTutorialProgressionWaitReply:
 
 			if (HasResponse ()) {
@@ -337,17 +288,6 @@ public class ClientF : MonoBehaviour {
 
 	// --------------------- Firm communication ------------------------------------------ //
 
-	public void AskTutorialDone () {
-
-		state = TLClientF.TutorialDone;
-		LogState ();
-	}
-
-	public void ReplyTutorialDone () {
-		state = TLClientF.GotTutorialDone;
-		LogState ();
-	}
-
 	public void AskFirmPassiveOpponentChoice () {
 
 		state = TLClientF.PassiveOpponentChoice;
@@ -368,38 +308,17 @@ public class ClientF : MonoBehaviour {
 			opponentPosition = int.Parse (args [1]);
 			opponentPrice = int.Parse (args [2]); 
 
-			state = nextState;
-			LogState ();
-		}
-	}
-
-	public void AskFirmPassiveConsumerChoices () {
-
-		state = TLClientF.PassiveConsumerChoices;
-	}
-
-	void ReplyFirmPassiveConsumerChoices (string [] args) {
-
-		TLClientF nextState = TLClientF.GotPassiveConsumerChoices;
-
-		int firstArg = int.Parse (args [0]);
-
-		if (firstArg < 0) {
-			TreatError (firstArg, args, nextState);
-
-		} else {
-
 			for (int i = 0; i < GameFeatures.nPositions; i++) {
-				consumerChoicesPassive [i] = int.Parse (args [1 + i]);
+				consumerChoicesPassive [i] = int.Parse (args [3 + i]);
 			}
 
-			endGame = int.Parse (args [1 + GameFeatures.nPositions]);
+			endGame = int.Parse (args [3 + GameFeatures.nPositions]);
 
 			if (endGame == 0) {
 				t++;
 			}
 
-			state = TLClientF.GotPassiveConsumerChoices;
+			state = nextState;
 			LogState ();
 		}
 	}
@@ -424,28 +343,6 @@ public class ClientF : MonoBehaviour {
 
 		} else {
 
-			state = TLClientF.GotActiveChoiceRecording;
-			LogState ();
-
-		}
-	}
-
-	public void AskFirmActiveConsumerChoices () {
-
-		state = TLClientF.ActiveConsumerChoices;
-	}
-
-	void ReplyFirmActiveConsumerChoices (string [] args) {
-
-		TLClientF nextState = TLClientF.GotActiveConsumerChoices;
-
-		int firstArg = int.Parse (args [0]);
-
-		if (firstArg < 0) {
-			TreatError (firstArg, args, nextState);
-		
-		} else {
-
 			for (int i = 0; i < GameFeatures.nPositions; i++) {
 				consumerChoicesActive [i] = int.Parse (args [1 + i]);
 			}
@@ -454,12 +351,13 @@ public class ClientF : MonoBehaviour {
 			if (endGame == 0) {
 				t++;
 			}
-
-			state = nextState;
+				
+			state = TLClientF.GotActiveChoiceRecording;
 			LogState ();
+
 		}
 	}
-
+		
 	public void SubmitTutorialProgression (float value) {
 		progressOnTutorial = value;
 		state = TLClientF.SubmitTutorialProgression;
@@ -468,24 +366,17 @@ public class ClientF : MonoBehaviour {
 	public void ReplySubmitTutorialProgression () {
 		state = TLClientF.GotSubmitTutorialProgression;
 	}
-
-
+		
 	// ------------------ General methods for communicating with the server --------- //
 
 	void MakeTheCorrectCall (string what, string [] strArgs) {
 
-		if (what == DemandF.tutorialDone && state == TLClientF.TutorialDoneWaitReply) {
-			ReplyTutorialDone ();
-		} else if (what == DemandF.askFirmInit && state == TLClientF.InitWaitReply) {
+		if (what == DemandF.askFirmInit && state == TLClientF.InitWaitReply) {
 			ReplyFirmInit (strArgs);
 		} else if (what == DemandF.askFirmPassiveOpponentChoice && state == TLClientF.PassiveOpponentChoiceWaitReply) {
 			ReplyFirmPassiveOpponentChoice (strArgs);
-		} else if (what == DemandF.askFirmPassiveConsumerChoices && state == TLClientF.PassiveConsumerChoicesWaitReply) {
-			ReplyFirmPassiveConsumerChoices (strArgs);
 		} else if (what == DemandF.askFirmActiveChoiceRecording && state == TLClientF.ActiveChoiceRecordingWaitReply) {
 			ReplyFirmActiveChoiceRecording (strArgs);
-		} else if (what == DemandF.askFirmActiveConsumerChoices && state == TLClientF.ActiveConsumerChoicesWaitReply) {
-			ReplyFirmActiveConsumerChoices (strArgs);
 		} else if (what == DemandF.submitTutorialProgression && state == TLClientF.SubmitTutorialProgressionWaitReply) {
 			ReplySubmitTutorialProgression ();
 		} else {

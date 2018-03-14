@@ -10,7 +10,12 @@ public class TextsF : MonoBehaviour {
 	[HideInInspector]
 	public Text cumulativeScore;
 	[HideInInspector]
+	public Text cumulativeScoreIcon;
+	[HideInInspector]
 	public Text cumulativeScoreOpponent;
+	[HideInInspector]
+	public Text cumulativeScoreOpponentIcon;
+
 	[HideInInspector]
 	public Text price;
 	[HideInInspector]
@@ -44,7 +49,10 @@ public class TextsF : MonoBehaviour {
 	void Start () {
 
 		cumulativeScore = Associate("TextCumulativeScore");
+		cumulativeScoreIcon = Associate ("TextCumulativeScoreIcon");
 		cumulativeScoreOpponent = Associate("TextCumulativeScoreOpponent");
+		cumulativeScoreOpponentIcon = Associate ("TextCumulativeScoreOpponentIcon");
+
 		price = Associate("TextPrice");
 		consumer = Associate("TextConsumer");
 		currentScore = Associate("TextCurrentScore");

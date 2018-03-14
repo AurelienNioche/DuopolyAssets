@@ -27,6 +27,8 @@ public class UIControllerF : MonoBehaviour {
 
 	bool scoreUpdated;
 
+	bool displayOpponentScore;
+
 	string tagHUDPlayer = "HUDPlayer";
 	string tagHUDOpponent = "HUDOpponent";
 
@@ -46,6 +48,14 @@ public class UIControllerF : MonoBehaviour {
 
 		GetPushButtons ();
 		GetPositionButtons ();
+
+		displayOpponentScore = gameController.GetDisplayOpponentScore ();
+
+		if (!displayOpponentScore) {
+			texts.cumulativeScoreOpponent.text = "";
+			texts.cumulativeScoreOpponentIcon.text = "";
+			texts.cumulativeScoreIcon.text = "Score:";
+		}
 		
 		scoreUpdated = true;
 	}
@@ -159,8 +169,8 @@ public class UIControllerF : MonoBehaviour {
 
 	void MakeButtonsInteractible (bool value) {
 		
-		AuthorizeDeplacement (true);
-		AuthorizePriceSelection (true);
+		AuthorizeDeplacement (value);
+		AuthorizePriceSelection (value);
 	}
 
 	// ------------------------------------------ //
@@ -356,19 +366,15 @@ public class UIControllerF : MonoBehaviour {
 	public void UpdateScore () {
 		
 		texts.cumulativeScore.text = score.ToString ();
-		texts.cumulativeScoreOpponent.text = scoreOpponent.ToString ();
+		if (displayOpponentScore) {
+			texts.cumulativeScoreOpponent.text = scoreOpponent.ToString ();
+		}
 	}
 
 	public void ResetScoreTexts () {
 		
 		texts.consumer.text = "?";
 		texts.currentScore.text = "?";
-	}
-
-	public void ResetCumulativeScore () {
-		
-		score = 0;
-		texts.cumulativeScore.text = score.ToString ();
 	}
 
 	// -------------- Turn Icons --------------------//
@@ -554,18 +560,6 @@ public class UIControllerF : MonoBehaviour {
 
 	// ----------------  Display messages  -------------------------------- //
 
-	public void ShowMessageFinal () {
-
-		ac.textMenuCentral.SetBool (Bool.glow, false);
-		texts.menuCentral.text = "You finished the final round!\n" +
-			"Score: " + gameController.GetScore().ToString() + "\n\n" + 
-			"Your HIT will be accepted within three days \n" +
-			"with a bonus corresponding to your scores on the two rounds!";
-
-		ac.textMenuCentral.SetBool(Bool.visible, true);
-		ac.textMenuCentral.SetBool (Bool.glow, true);
-	}
-
 	public void ShowMessageWaiting () {
 
 		ac.textMenuCentral.SetBool (Bool.glow, true);
@@ -611,23 +605,42 @@ public class UIControllerF : MonoBehaviour {
 		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
+	public void ShowMessagePlayerDisconnected () {
+
+		ac.textMenuCentral.SetBool (Bool.glow, false);
+		texts.menuCentral.text = 
+			"After a long delay without news from you,\n" +
+			"there were no choice but to put an end to the game\n\n" + 
+			"Your HIT will be accepted within three days\n" +
+			"with a bonus corresponding to your score!\n\n" +
+			"If it is not done yet, enter the survey code 999 in the MTurk form\n" +
+			"Thanks for your participation!";
+		ac.textMenuCentral.SetBool (Bool.visible, true);
+	}
+
 	public void ShowMessageOpponentDisconnected () {
 
-		ac.textMenuCentral.SetBool (Bool.glow, true);
+		ac.textMenuCentral.SetBool (Bool.glow, false);
 		texts.menuCentral.text = "Unfortunately, the other player is disconnected\n" +
 			"There is no choice but to put an end to the game\n\n" +
-			"Your HIT will be accepted within three days \n" +
-			"with a bonus corresponding to your score!\n" +
+			"Your HIT will be accepted within three days\n" +
+			"with a bonus corresponding to your score!\n\n" +
+			"If it is not done yet, enter the survey code 999 in the MTurk form\n" +
 			"Thanks for your participation!";
 
 		ac.textMenuCentral.SetBool (Bool.visible, true);
 	}
 
-	public void ShowMessagePlayerDisconnected () {
+	public void ShowMessageFinal () {
 
-		ac.textMenuCentral.SetBool (Bool.glow, true);
-		texts.menuCentral.text = "After a long delay without news from you,\n" +
-			"there were no choice but to put an end to the game";
-		ac.textMenuCentral.SetBool (Bool.visible, true);
+		ac.textMenuCentral.SetBool (Bool.glow, false);
+		texts.menuCentral.text = "You finished the final round!\n" +
+			"Score: " + gameController.GetScore().ToString() + "\n\n" + 
+			"Your HIT will be accepted within three days\n" +
+			"with a bonus corresponding to your score!\n\n" +
+			"If it is not done yet, enter the survey code 999 in the MTurk form\n" +
+			"Thanks for your participation!";
+
+		ac.textMenuCentral.SetBool(Bool.visible, true);
 	}
 }

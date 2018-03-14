@@ -617,24 +617,25 @@ Prefab:
     - target: {fileID: 224504586680335782, guid: c36585969fb2d482c909ed7141aa1c9e,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -16.699997
+      value: -2.35
       objectReference: {fileID: 0}
     - target: {fileID: 224504586680335782, guid: c36585969fb2d482c909ed7141aa1c9e,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 114171453018297172, guid: c36585969fb2d482c909ed7141aa1c9e,
         type: 2}
       propertyPath: m_FontData.m_Alignment
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 114171453018297172, guid: c36585969fb2d482c909ed7141aa1c9e,
         type: 2}
       propertyPath: m_Text
-      value: "Unfortunately, we did not succeed in finding you an opponent \nthere
-        is no choice but to cancel the game\n\nyour HIT will nethertheless be accepted
-        within the 3 Days\nTHanks for your participation !"
+      value: 'Looking for a game with missing players...
+
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 224504586680335782, guid: c36585969fb2d482c909ed7141aa1c9e,
         type: 2}

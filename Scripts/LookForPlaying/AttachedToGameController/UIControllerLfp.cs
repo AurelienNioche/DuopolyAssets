@@ -118,6 +118,8 @@ public class UIControllerLfp : MonoBehaviour {
 	}
 
 	public void NoRoomAvailable () {
+		
+		animTextCentral.SetBool (Bool.glow, true);
 		textCentral.text = "No game is running,\nor all players have already been recruited!"; 
 		animButtonParticipation.SetBool (Bool.visible, false);
 	}
@@ -130,12 +132,12 @@ public class UIControllerLfp : MonoBehaviour {
 		animButtonParticipation.SetBool (Bool.glow, true);
 
 		animTextCentral.SetBool (Bool.glow, false);
-		textCentral.text = "There are games with available places. Do you want to join?"; 
+		textCentral.text = "There are games with available places. Do you want to join?\n\n"; 
 	}
 
 	public void SubmittingParticipation () {
 		animTextCentral.SetBool (Bool.glow, true);
-		textCentral.text = "Booking the place...";
+		textCentral.text = "Booking the place...\n\n";
 	}
 
 	public void UpdateMissingPlayers (int missingPlayers) {
@@ -182,43 +184,55 @@ public class UIControllerLfp : MonoBehaviour {
 	public void ShowMessageLookingForARoomAvailable () {
 		animTextCentral.SetBool (Bool.glow, true);
 		textCentral.text = 
-			"Looking for a game with mssing players...";
+			"Looking for a game with missing players...";
 
 		animTextCentral.SetBool (Bool.visible, true);
 	}
 
 	public void ShowMessageOpponentDisconnected () {
 
-		animTextCentral.SetBool (Bool.glow, true);
+		animTextCentral.SetBool (Bool.glow, false);
 		textCentral.text = 
 			"Unfortunately, the other player is disconnected\n" +
-			"There is no choice but to put an end to the game\n" +
-			"Your HIT will be accepted within three days";
+			"There is no choice but to put an end to the game\n\n" +
+			"Your HIT will be accepted within three days\n" +
+			"with a bonus corresponding to your score!\n\n" +
+			"If it is not done yet, enter the survey code 999 in the MTurk form\n" +
+			"Thanks for your participation!";
 
 		animTextCentral.SetBool (Bool.visible, true);
 	}
 
 	public void ShowMessagePlayerDisconnected () {
 
-		animTextCentral.SetBool (Bool.glow, true);
-		textCentral.text = "After a long delay without news from you,\n" +
-			"you have been banned in order to not block the other player";
+		animTextCentral.SetBool (Bool.glow, false);
+		textCentral.text = 
+			"After a long delay without news from you,\n" +
+			"there were no choice but to put an end to the game\n\n" +
+			"Your HIT will be accepted within three days\n" +
+			"with a bonus corresponding to your score!\n\n" +
+			"If it is not done yet, enter the survey code 999 in the MTurk form\n" +
+			"Thanks for your participation!";
 		animTextCentral.SetBool (Bool.visible, true);
 	}
 
 	public void ShowMessageAlreadyPlayed () {
 
-		animTextCentral.SetBool (Bool.glow, true);
-		textCentral.text = "We know that this game is the best game you ever played, " +
-			"\nbut it is a single shot experiment!"; 
+		animTextCentral.SetBool (Bool.glow, false);
+		textCentral.text = 
+			"We know that this game is the best game you ever played,\n" +
+			"but it is a single shot experiment!"; 
 	}
 
 	public void ShowMessageNoOtherPlayer () {
 
-		animTextCentral.SetBool (Bool.glow, true);
-		textCentral.text = "Unfortunately, we did not succeed in finding you an opponent\n" +
+		animTextCentral.SetBool (Bool.glow, false);
+		textCentral.text = 
+			"Unfortunately, we did not succeed in finding you an opponent\n" +
 			"There is no choice but to cancel the game\n\n" +
-			"Your HIT will be nevertheless accepted within three days\n" +
+			"Your HIT will be accepted within three days\n" +
+			"with a bonus corresponding to your score!\n\n" +
+			"If it is not done yet, enter the survey code 999 in the MTurk form\n" +
 			"Thanks for your participation!";
 		animTextCentral.SetBool (Bool.visible, true);
 	}

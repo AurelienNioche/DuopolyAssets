@@ -24,6 +24,8 @@ public class Parameters : MonoBehaviour {
 
 	int[, ] consumersFieldOfView;
 
+	bool displayOpponentScore = false;
+
 	// Use this for initialization
 	void Start () {
 
@@ -97,6 +99,14 @@ public class Parameters : MonoBehaviour {
 
 	public string GetServerName () {
 		return serverName;
+	}
+
+	public bool GetDisplayOpponentScore () {
+		return displayOpponentScore;
+	}
+
+	public void SetDisplayOpponentScore (bool value) {
+		displayOpponentScore = value;
 	}
 
 }

@@ -154,38 +154,19 @@ public class RoundF : MonoBehaviour {
 
 			break;
 
-		case TLRoundF.PassiveOpponentHasMoved:
-
-			// Instructions for client
-			client.AskFirmPassiveConsumerChoices ();
+		case TLRoundF.PassiveOpponentHasMoved:  // this state is reached once the opponent has done his move (signal is sent by the population control)
 
 			// Instructions for UIController
 			uiController.SetOpponentPrice (client.GetOpponentPrice ());
 			uiController.ChangeSelectedTurn (Turn.consumers2);
 
+			scoreManager.ComputeScores (client.GetConsumerChoicesPassive (), client.GetPrice (), client.GetOpponentPrice ());
+
+			// Instructions to populationController
+			StartCoroutine (populationController.MoveConsumers (client.GetConsumerChoicesPassive ()));
+
 			// Update state
 			RoundNextStep ();
-			break;
-
-		case TLRoundF.PassiveWaitingConsumers:
-
-			if (client.IsState (TLClientF.GotPassiveConsumerChoices)) {
-
-				if (client.GotFatalError ()) {
-
-					stateGame = TLRoundF.EndingGame;
-					LogGameState ();
-					break;
-				}
-
-				scoreManager.ComputeScores (client.GetConsumerChoicesPassive (), client.GetPrice (), client.GetOpponentPrice ());
-
-				// Instructions to populationController
-				StartCoroutine (populationController.MoveConsumers (client.GetConsumerChoicesPassive ()));
-
-				// Update state
-				RoundNextStep ();
-			}
 			break;
 
 		case TLRoundF.PassiveConsumersHaveMoved:
@@ -302,30 +283,12 @@ public class RoundF : MonoBehaviour {
 
 		case TLRoundF.ActiveChoiceSubmitted:
 
-			client.AskFirmActiveConsumerChoices ();
+			scoreManager.ComputeScores (client.GetConsumerChoicesActive (), client.GetPrice (), client.GetOpponentPrice ());
+
+			// Instructions for populationController
+			StartCoroutine (populationController.MoveConsumers (client.GetConsumerChoicesActive ()));
 
 			RoundNextStep ();
-			break;
-
-		case TLRoundF.ActiveWaitingConsumers:
-
-			if (client.IsState (TLClientF.GotActiveConsumerChoices)) {
-
-				if (client.GotFatalError ()) {
-
-					stateGame = TLRoundF.EndingGame;
-					LogGameState ();
-					break;
-				}
-
-				scoreManager.ComputeScores (client.GetConsumerChoicesActive (), client.GetPrice (), client.GetOpponentPrice ());
-
-				// Instructions for populationController
-				StartCoroutine (populationController.MoveConsumers (client.GetConsumerChoicesActive ()));
-
-				// Update state
-				RoundNextStep ();
-			}
 			break;
 
 		case TLRoundF.ActiveConsumersHaveMoved:
